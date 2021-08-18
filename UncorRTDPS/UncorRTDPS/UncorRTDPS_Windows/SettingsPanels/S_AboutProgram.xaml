@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="UncorRTDPS.UncorRTDPS_Windows.SettingsPanels.S_AboutProgram"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UncorRTDPS.UncorRTDPS_Windows.SettingsPanels"
+             mc:Ignorable="d" 
+             Width="Auto" MaxWidth="300" Height="Auto">
+    <Grid Width="Auto" Height="Auto">
+        <RichTextBox Name="RichTextBox_En" Visibility="Visible" Background="Transparent" Foreground="#FFABABA7" AllowDrop="False" IsReadOnly="True" IsDocumentEnabled="True" Width="Auto" Height="Auto" BorderThickness="0">
+            <FlowDocument>
+                <Paragraph>
+                    <Bold>UncorRTDPS</Bold> - real time damage per second in Royal Quest based on a video capture of the in-game chat
+                    with shown damage. This program is legal and as a proof you can see it posted on the official Royal Quest forum. 
+                    See more in .pdf and in a corresponding post on the official game forum.
+                    <LineBreak/>
+                    <LineBreak/>
+                    Author's contacts.
+                    E-mail: uncorstat@gmail.com. In-game: Uncor. Forum:
+                    <Hyperlink Click="Hyperlink_Click">https://www.royalquest.ru/forum/index.php?showtopic=43506</Hyperlink>
+                    <LineBreak/>
+                    <Bold>CAUTION!</Bold> Only by downloading the program from the post on the official forum you are safe from possible scammers and hackers.
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+        <RichTextBox Name="RichTextBox_Ru" Visibility="Collapsed" Background="Transparent" Foreground="#FFABABA7" AllowDrop="False" IsReadOnly="True" IsDocumentEnabled="True" Width="Auto" Height="Auto" BorderThickness="0">
+            <FlowDocument>
+                <Paragraph>
+                    <Bold>UncorRTDPS</Bold> - дпс (урон в секунду) в режиме реального времени в Royal Quest, основанный на видеозахвате чата в игре. 
+                    Эта программа легальна, и, как доказательство этого, вы можете увидеть тему на официальном форуме игры. Больше информации в .pdf и в соответствующей теме на официальном форуме игры.
+                    <LineBreak/>
+                    <LineBreak/>
+                    Контакты автора.
+                    E-mail: uncorstat@gmail.com. В игре: Uncor. Форум:
+                    <Hyperlink Click="Hyperlink_Click">https://www.royalquest.ru/forum/index.php?showtopic=43506</Hyperlink>
+                    <LineBreak/>
+                    <Bold>ОСТОРОЖНО!</Bold> Только скачивая программу с темы на официальном форуме вы в безопасности от мошенников и хаЦкеров.
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</UserControl>

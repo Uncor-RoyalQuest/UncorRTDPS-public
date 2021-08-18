@@ -1,0 +1,52 @@
+﻿<Window x:Class="UncorRTDPS.UtilWindows.MissingVisualCPPRedist"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UncorRTDPS.UtilWindows"
+        mc:Ignorable="d"
+        Title="Missing Microsoft Visual C++ 2015-2019 Redistributable" Height="300" Width="400">
+    <Grid>
+        <RichTextBox Name="RichTextBox_EnglishVersion" Visibility="Collapsed" IsReadOnly="True" FontSize="12" IsDocumentEnabled="True" AllowDrop="False">
+            <FlowDocument>
+                <Paragraph>
+                    Microsoft Visual C++ 2015-2019 Redistributable is probably missing.
+                    Try download from the direct links below.
+                    <Run Name="Run_En_Bit">
+                       Your OS is
+                    </Run>
+                    <LineBreak/>
+                    64-bit:
+                    <Hyperlink Name="HyperLink_En_64bit" Click="HyperLink_En_64bit_Click">https://aka.ms/vs/16/release/vc_redist.x64.exe</Hyperlink>
+                    <LineBreak/>
+                    32-bit:
+                    <Hyperlink Name="HyperLink_En_32bit" Click="HyperLink_En_32bit_Click">https://aka.ms/vs/16/release/vc_redist.x86.exe</Hyperlink>
+                </Paragraph>
+                <Paragraph>
+                    If already installed, and this notification keeps emerging, delete "cpp_r_ignore.txt" file from the UncorRTDPS folder.
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+        <RichTextBox Name="RichTextBox_RussianVersion" Visibility="Collapsed" IsReadOnly="True">
+            <FlowDocument>
+                <Paragraph>
+                    Microsoft Visual C++ 2015 Redistributable (или другая совместимая версия) возможно отсутствует.
+                    Скачать можно по прямой ссылке ниже.
+                    <Run Name="Run_Ru_Bit">
+                         Ваша ОС
+                    </Run>
+                    <LineBreak/>
+                    64-бит:
+                    <Hyperlink Click="HyperLink_En_64bit_Click">https://aka.ms/vs/16/release/vc_redist.x64.exe</Hyperlink>
+                    <LineBreak/>
+                    32-бит:
+                    <Hyperlink Click="HyperLink_En_32bit_Click">https://aka.ms/vs/16/release/vc_redist.x86.exe</Hyperlink>
+                </Paragraph>
+                <Paragraph>
+                    Если установлено, но это окно продолжает появляться, то удалите "cpp_r_ignore.txt" файл из папки UncorRTDPS.
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</Window>

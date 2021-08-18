@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="UncorRTDPS.UncorRTDPS_Windows.DpsPanel.Panel_DamageInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UncorRTDPS.UncorRTDPS_Windows.DpsPanel"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100" Height="Auto">
+    <Grid Height="Auto" Margin="5,0,0,0">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Name="ContextMenu_Item_ResetStat" Header="Reset statistics" Click="ContextMenu_Item_ResetStat_Click"/>
+                <Separator/>
+                <MenuItem Name="ContextMenu_Item_CopyDmg" Header="Copy to clipboard: dmg" Click="ContextMenu_Item_CopyDmg_Click"/>
+                <MenuItem Name="ContextMenu_Item_CopyHits" Header="Copy to clipboard: hits" Click="ContextMenu_Item_CopyHits_Click"/>
+                <MenuItem Name="ContextMenu_Item_CopyT" Header="Copy to clipboard: t" Click="ContextMenu_Item_CopyT_Click"/>
+                <MenuItem Name="ContextMenu_Item_CopyDps" Header="Copy to clipboard: dps" Click="ContextMenu_Item_CopyDps_Click"/>
+                <Separator/>
+                <MenuItem Name="ContextMenu_Item_CopyAll" Header="Copy to clipboard: All" Click="ContextMenu_Item_CopyAll_Click"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Foreground="#FFABABA7"-->
+        <TextBlock Name="TextBlock_TargetName" Text="[name]" Foreground="#FFABABA7" Grid.Row="0" Grid.ColumnSpan="2" Padding="5,0,0,0" FontWeight="Bold">
+            <!--
+            <TextBlock.Effect>
+                <DropShadowEffect x:Name="TextBlock_TargetName_DropShadowEffect" Color="Black" ShadowDepth="0" BlurRadius="5" Opacity="1"/>
+            </TextBlock.Effect>
+            -->
+        </TextBlock>
+
+        <TextBlock Text="dmg:" Name="TextBlock_DMG" Foreground="#FFABABA7" Grid.Row="1" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_DMG_Value_MouseLeftButtonDown"/>
+        <StackPanel Orientation="Horizontal"  Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="0" Name="TextBlock_DMG_Value" Foreground="#FFABABA7" MouseLeftButtonDown="TextBlock_DMG_Value_MouseLeftButtonDown"/>
+            <TextBlock Text="" Name="TextBlock_DMG_PercentValue" Foreground="#FFABABA7" Padding="5,0,0,0"/>
+        </StackPanel>
+
+        <TextBlock Text="hits:" Name="TextBlock_Hits" Foreground="#FFABABA7" Grid.Row="2" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_Hits_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="0" Name="TextBlock_Hits_Value" Foreground="#FFABABA7" Grid.Row="2" Grid.Column="1" MouseLeftButtonDown="TextBlock_Hits_Value_MouseLeftButtonDown"/>
+
+        <TextBlock Text="t:" Name="TextBlock_T" Foreground="#FFABABA7" Grid.Row="3" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="0" Name="TextBlock_T_Value" Foreground="#FFABABA7" Grid.Row="3" Grid.Column="1" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
+
+        <TextBlock Text="dps:" Name="TextBlock_DPS" Foreground="#FFABABA7" Grid.Row="4" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown" Padding="0,5,5,0"/>
+        <TextBlock Text="0" Name="TextBlock_DPS_Value" Foreground="#FFABABA7" Grid.Row="4" Grid.Column="1" Padding="0,5,0,0" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown"/>
+    </Grid>
+</UserControl>
