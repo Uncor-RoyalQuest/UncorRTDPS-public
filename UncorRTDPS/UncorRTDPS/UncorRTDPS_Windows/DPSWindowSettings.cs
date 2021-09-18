@@ -18,11 +18,13 @@
 
         public bool ShowDamage_mode_0 { get; set; }
         public bool ShowHits_mode_0 { get; set; }
+        public bool ShowMaxHitDmg_mode_0 { get; set; }
         public bool ShowT_mode_0 { get; set; }
         public bool ShowDps_mode_0 { get; set; }
 
         public bool ShowDamage_mode_1 { get; set; }
         public bool ShowHits_mode_1 { get; set; }
+        public bool ShowMaxHitDmg_mode_1 { get; set; }
         public bool ShowT_mode_1 { get; set; }
         public bool ShowDps_mode_1 { get; set; }
         public int BossesLimit_mode_1 { get; set; }
@@ -53,11 +55,13 @@
 
             this.ShowDamage_mode_0 = s.ShowDamage_mode_0;
             this.ShowHits_mode_0 = s.ShowHits_mode_0;
+            this.ShowMaxHitDmg_mode_0 = s.ShowMaxHitDmg_mode_0;
             this.ShowT_mode_0 = s.ShowT_mode_0;
             this.ShowDps_mode_0 = s.ShowDps_mode_0;
 
             this.ShowDamage_mode_1 = s.ShowDamage_mode_1;
             this.ShowHits_mode_1 = s.ShowHits_mode_1;
+            this.ShowMaxHitDmg_mode_1 = s.ShowMaxHitDmg_mode_1;
             this.ShowT_mode_1 = s.ShowT_mode_1;
             this.ShowDps_mode_1 = s.ShowDps_mode_1;
             this.BossesLimit_mode_1 = s.BossesLimit_mode_1;
@@ -85,10 +89,12 @@
                 s1.EnableAliases == s2.EnableAliases &&
                 s1.ShowDamage_mode_0 == s2.ShowDamage_mode_0 &&
                 s1.ShowHits_mode_0 == s2.ShowHits_mode_0 &&
+                s1.ShowMaxHitDmg_mode_0 == s2.ShowMaxHitDmg_mode_0 &&
                 s1.ShowT_mode_0 == s2.ShowT_mode_0 &&
                 s1.ShowDps_mode_0 == s2.ShowDps_mode_0 &&
                 s1.ShowDamage_mode_1 == s2.ShowDamage_mode_1 &&
                 s1.ShowHits_mode_1 == s2.ShowHits_mode_1 &&
+                s1.ShowMaxHitDmg_mode_1 == s2.ShowMaxHitDmg_mode_1 &&
                 s1.ShowT_mode_1 == s2.ShowT_mode_1 &&
                 s1.ShowDps_mode_1 == s2.ShowDps_mode_1 &&
                 s1.BossesLimit_mode_1 == s2.BossesLimit_mode_1 &&

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UncorRTDPS.UncorRTDPS_Windows"
         mc:Ignorable="d"
-        Title="RTDPS" Height="180" Width="136" WindowStyle="None" Topmost="True" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="Manual" MinHeight="50" MinWidth="80" Left="1800" Top="400" Background="#FF2D2D30" MouseDown="Window_MouseDown" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Loaded="Window_Loaded">
+        Title="RTDPS" Height="180" Width="136" WindowStyle="None" Topmost="True" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="Manual" MinHeight="50" MinWidth="100" Left="1800" Top="400" Background="#FF2D2D30" MouseDown="Window_MouseDown" Closing="Window_Closing" LocationChanged="Window_LocationChanged" Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="ImageButtonStyle">
@@ -39,12 +39,19 @@
                 <Button Style="{StaticResource ImageButtonStyle}" Click="ImageButton_Status_Click" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
                     <Image Name="Image_Status" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto"/>
                 </Button>
+                
                 <Button Style="{StaticResource ImageButtonStyle}" Click="ImageButton_Settings_Click" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
                     <Image Name="Image_Settings" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
+
+                <Button  Style="{StaticResource ImageButtonStyle}" Click="ImageButton_History_Click" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
+                    <Image Name="Image_DamageHistory" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+
                 <Button Style="{StaticResource ImageButtonStyle}" Click="ImageButton_DragRTDPS_Click" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
                     <Image Name="Image_LockDragRTDPS" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
+
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0,0,0">

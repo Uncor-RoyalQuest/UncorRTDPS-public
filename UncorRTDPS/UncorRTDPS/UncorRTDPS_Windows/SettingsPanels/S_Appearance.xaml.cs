@@ -10,6 +10,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
     /// </summary>
     public partial class S_Appearance : UserControl, IMenuPanel, IDisposable
     {
+        private string menu_name = "appearance";
         public S_Appearance()
         {
             InitializeComponent();
@@ -38,12 +39,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             TextBlock_ShowInTheMode_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowInTheMode_Mode_0");
             TextBlock_ShowDmg_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowDmg_Mode_0");
             TextBlock_ShowHits_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowHits_Mode_0");
+            TextBlock_ShowMaxHitDmg_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowMaxHitDmg_Mode_0");
+            TextBlock_ShowMaxHitDmg_Mode_0.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowMaxHitDmg_Mode_0_Tooltip");
             TextBlock_ShowT_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowT_Mode_0");
             TextBlock_ShowDps_Mode_0.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowDps_Mode_0");
 
             TextBlock_ShowInTheMode_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowInTheMode_Mode_1");
             TextBlock_ShowDmg_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowDmg_Mode_1");
             TextBlock_ShowHits_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowHits_Mode_1");
+            TextBlock_ShowMaxHitDmg_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowMaxHitDmg_Mode_1");
+            TextBlock_ShowMaxHitDmg_Mode_1.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowMaxHitDmg_Mode_1_Tooltip");
             TextBlock_ShowT_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowT_Mode_1");
             TextBlock_ShowDps_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiShowDps_Mode_1");
             TextBlock_BossesLimit_Mode_1.Text = UncorRTDPS_Localization.GetLocaleGuiVal("guiMaxBosses_Mode_1");
@@ -88,11 +93,13 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
             dpsWindowSettings.ShowDamage_mode_0 = CheckBox_ShowDmg_Mode_0.IsChecked == true ? true : false;
             dpsWindowSettings.ShowHits_mode_0 = CheckBox_ShowHits_Mode_0.IsChecked == true ? true : false;
+            dpsWindowSettings.ShowMaxHitDmg_mode_0 = CheckBox_ShowMaxHitDmg_Mode_0.IsChecked == true ? true : false;
             dpsWindowSettings.ShowT_mode_0 = CheckBox_ShowT_Mode_0.IsChecked == true ? true : false;
             dpsWindowSettings.ShowDps_mode_0 = CheckBox_ShowDps_Mode_0.IsChecked == true ? true : false;
 
             dpsWindowSettings.ShowDamage_mode_1 = CheckBox_ShowDmg_Mode_1.IsChecked == true ? true : false;
             dpsWindowSettings.ShowHits_mode_1 = CheckBox_ShowHits_Mode_1.IsChecked == true ? true : false;
+            dpsWindowSettings.ShowMaxHitDmg_mode_1 = CheckBox_ShowMaxHitDmg_Mode_1.IsChecked == true ? true : false;
             dpsWindowSettings.ShowT_mode_1 = CheckBox_ShowT_Mode_1.IsChecked == true ? true : false;
             dpsWindowSettings.ShowDps_mode_1 = CheckBox_ShowDps_Mode_1.IsChecked == true ? true : false;
             dpsWindowSettings.BossesLimit_mode_1 = (int)Slider_BossesLimit_Mode_1.Value;
@@ -152,11 +159,13 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
             CheckBox_ShowDmg_Mode_0.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowDamage_mode_0;
             CheckBox_ShowHits_Mode_0.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowHits_mode_0;
+            CheckBox_ShowMaxHitDmg_Mode_0.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowMaxHitDmg_mode_0;
             CheckBox_ShowT_Mode_0.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowT_mode_0;
             CheckBox_ShowDps_Mode_0.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowDps_mode_0;
 
             CheckBox_ShowDmg_Mode_1.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowDamage_mode_1;
             CheckBox_ShowHits_Mode_1.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowHits_mode_1;
+            CheckBox_ShowMaxHitDmg_Mode_1.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowMaxHitDmg_mode_1;
             CheckBox_ShowT_Mode_1.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowT_mode_1;
             CheckBox_ShowDps_Mode_1.IsChecked = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowDps_mode_1;
             Slider_BossesLimit_Mode_1.Value = UncorRTDPS_StaticSettings.DpsWindowSettings.BossesLimit_mode_1;
@@ -191,12 +200,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             TextBlock_ShowInTheMode_Mode_0.Text = null;
             TextBlock_ShowDmg_Mode_0.Text = null;
             TextBlock_ShowHits_Mode_0.Text = null;
+            TextBlock_ShowMaxHitDmg_Mode_0.Text = null;
+            TextBlock_ShowMaxHitDmg_Mode_0.ToolTip = null;
             TextBlock_ShowT_Mode_0.Text = null;
             TextBlock_ShowDps_Mode_0.Text = null;
 
             TextBlock_ShowInTheMode_Mode_1.Text = null;
             TextBlock_ShowDmg_Mode_1.Text = null;
             TextBlock_ShowHits_Mode_1.Text = null;
+            TextBlock_ShowMaxHitDmg_Mode_1.Text = null;
+            TextBlock_ShowMaxHitDmg_Mode_1.ToolTip = null;
             TextBlock_ShowT_Mode_1.Text = null;
             TextBlock_ShowDps_Mode_1.Text = null;
             TextBlock_BossesLimit_Mode_1.Text = null;
@@ -212,6 +225,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             TextBlock_ShowOcrStat_MLoad.Text = null;
 
             Button_ApplyNewSettings.Content = null;
+        }
+
+        public string GetMenuName()
+        {
+            return this.menu_name;
         }
     }
 }

@@ -6,14 +6,15 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using UncorRTDPS.Services;
-using UncorRTDPS.Util;
-using UncorRTDPS.Services.GlobalKeyPressListener;
-using UncorRTDPS.Services.HotKeys;
+using UncorRTDPS.DamageCharts;
 using UncorRTDPS.DpsModels;
 using UncorRTDPS.DpsModels.TargetsDictionary;
 using UncorRTDPS.RTDPS_Settings;
+using UncorRTDPS.Services;
 using UncorRTDPS.Services.Aliasing;
+using UncorRTDPS.Services.GlobalKeyPressListener;
+using UncorRTDPS.Services.HotKeys;
+using UncorRTDPS.Util;
 
 namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
 {
@@ -46,10 +47,10 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
         private Brush selectedForeground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 55));
         private Dispatcher windowDispatcher;
         private string commonTargetName;
-        private ADamageModel lastADamageModel = null;
+        private DamageModel lastDamageModel = null;
         private Target lastTarget = null;
         private NumberFormatInfo numberFormatInfo_FancyLong = new NumberFormatInfo { NumberGroupSeparator = " " };
-        private string uid = "panel_dmgInfo_"+UniqueLongGenerator.GetUniqueId();
+        private string uid = "panel_dmgInfo_" + UniqueLongGenerator.GetUniqueId();
 
         private string currentTarget_OriginalName = "";
 
@@ -119,6 +120,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             ContextMenu_Item_CopyT.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyT");
             ContextMenu_Item_CopyDps.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyDps");
             ContextMenu_Item_CopyHits.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyHits");
+            ContextMenu_Item_CopyMaxHitDmg.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyMaxHitDmg");
             ContextMenu_Item_CopyAll.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyAll");
 
             ContextMenu_Item_ResetStat.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiResetStatistics");
@@ -126,64 +128,54 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
         }
 
         public void InitTooltips()
-        { 
+        {
             TextBlock_DMG.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiDMG_tooltip");
             TextBlock_Hits.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiHits_tooltip");
+            TextBlock_MaxHitDmg.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiMaxHitDmg_tooltip");
             TextBlock_T.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiT_tooltip");
             TextBlock_DPS.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiDPS_tooltip");
         }
 
-        public void UpdateViewData(ADamageModel aDamageModel, Target target)
+        public void UpdateViewData(DamageModel damageModel, Target target)
         {
-            if (aDamageModel.IsResetAsked())
+
+            bool isResetAsked = damageModel.IsResetAsked();
+            if (isResetAsked && lastTarget != target)
+            {
+                UpdTargetNameInfo(target, damageModel.TotalDamage);
+                lastTarget = target;
+                return;
+            }
+            if (isResetAsked)
                 return;
 
             //dmg
-            TextBlock_DMG_Value.Text = aDamageModel.GetTotalDamage().ToString("#,0",numberFormatInfo_FancyLong);
+            TextBlock_DMG_Value.Text = damageModel.TotalDamage.ToString("#,0", numberFormatInfo_FancyLong);
 
             //hits
-            TextBlock_Hits_Value.Text = aDamageModel.GetHits().ToString("#,0", numberFormatInfo_FancyLong);
+            TextBlock_Hits_Value.Text = damageModel.Hits.ToString("#,0", numberFormatInfo_FancyLong);
+
+            //max dmg
+            TextBlock_MaxHitDmg_Value.Text = damageModel.MaxHitDmg.ToString("#,0", numberFormatInfo_FancyLong);
 
             //t
-            long dmgTime = aDamageModel.GetDamageTime() / 1000;
+            long dmgTime = damageModel.CalcDamageTime() / 1000;
             TextBlock_T_Value.Text = dmgTime.ToString("#,0", numberFormatInfo_FancyLong);
 
             //dps
             if (dmgTime == 0)
                 dmgTime = 1;
-            TextBlock_DPS_Value.Text = aDamageModel.GetDps().ToString("#,0", numberFormatInfo_FancyLong);
+            TextBlock_DPS_Value.Text = damageModel.CalcDps().ToString("#,0", numberFormatInfo_FancyLong);
 
             //target name
-            /*
-            if (target == null)
-            {
-                if (TextBlock_TargetName.Text != commonTargetName)
-                {
-                    TextBlock_TargetName.Text = commonTargetName;
-                    TextBlock_TargetName.ToolTip = commonTargetName;
-                    TextBlock_DMG_PercentValue.Text = "";
-                }
-            }
-            else
-            {
-                if (TextBlock_TargetName.Text != target.originalName)
-                {
-                    TextBlock_TargetName.Text = target.originalName;
-                    TextBlock_TargetName.ToolTip = target.originalName;
-                }
+            UpdTargetNameInfo(target, damageModel.TotalDamage);
 
-                //dmg percent value
-                string s_perc = GetPercentFromDamageAndHp(aDamageModel.GetTotalDamage(), target.hp);
-                if (s_perc != null)
-                {
-                    TextBlock_DMG_PercentValue.Text = s_perc;
-                }
-                else if (TextBlock_DMG_PercentValue.Text.Length > 0)
-                {
-                    TextBlock_DMG_PercentValue.Text = "";
-                }
-            }
-            */
+            lastDamageModel = damageModel;
+            lastTarget = target;
+        }
+
+        private void UpdTargetNameInfo(Target target, long damageDealt)
+        {
             if (target == null)
             {
                 if (currentTarget_OriginalName != commonTargetName)
@@ -216,7 +208,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
                 }
 
                 //dmg percent value
-                string s_perc = GetPercentFromDamageAndHp(aDamageModel.GetTotalDamage(), target.hp);
+                string s_perc = GetPercentFromDamageAndHp(damageDealt, target.hp);
                 if (s_perc != null)
                 {
                     TextBlock_DMG_PercentValue.Text = s_perc;
@@ -226,9 +218,6 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
                     TextBlock_DMG_PercentValue.Text = "";
                 }
             }
-
-            lastADamageModel = aDamageModel;
-            lastTarget = target;
         }
 
         public string GetPercentFromDamageAndHp(long dmg, long hp)
@@ -284,6 +273,31 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             else
             {
                 lastLeftClick_TextBlock_Hits_Value = timeNow;
+            }
+        }
+
+        private long lastLeftClick_TextBlock_MaxHitDmg_Value = 0;
+        private void TextBlock_MaxHitDmg_Value_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            long timeNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (timeNow - lastLeftClick_TextBlock_MaxHitDmg_Value < 500)
+            {
+                //double click confirmed
+                TextBlock_MaxHitDmg.Foreground = selectedForeground;
+                TextBlock_MaxHitDmg_Value.Foreground = selectedForeground;
+
+                Task.Delay(100).ContinueWith(_ =>
+                {
+                    windowDispatcher.Invoke(SetTextBlocksColor_MaxHitDmg_ToDefault, System.Windows.Threading.DispatcherPriority.Normal);
+                }
+                );
+
+                Clipboard.SetText(TextBlock_MaxHitDmg_Value.Text);
+                lastLeftClick_TextBlock_MaxHitDmg_Value = 0;
+            }
+            else
+            {
+                lastLeftClick_TextBlock_MaxHitDmg_Value = timeNow;
             }
         }
 
@@ -350,6 +364,12 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             TextBlock_Hits_Value.Foreground = defaultForeground;
         }
 
+        public void SetTextBlocksColor_MaxHitDmg_ToDefault()
+        {
+            TextBlock_MaxHitDmg.Foreground = defaultForeground;
+            TextBlock_MaxHitDmg_Value.Foreground = defaultForeground;
+        }
+
         public void SetTextBlocksColor_T_ToDefault()
         {
             TextBlock_T.Foreground = defaultForeground;
@@ -369,7 +389,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
                 "dmg: " + TextBlock_DMG_Value.Text + " " + TextBlock_DMG_PercentValue.Text + Environment.NewLine +
                 "t: " + TextBlock_T_Value.Text + Environment.NewLine +
                 "dps: " + TextBlock_DPS_Value.Text + Environment.NewLine +
-                "hits: " + TextBlock_Hits_Value.Text;
+                "hits: " + TextBlock_Hits_Value.Text + Environment.NewLine +
+                "max: " + TextBlock_MaxHitDmg_Value.Text;
             Clipboard.SetText(t);
         }
 
@@ -393,6 +414,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             Clipboard.SetText(TextBlock_Hits_Value.Text);
         }
 
+        private void ContextMenu_Item_CopyMaxHitDmg_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(TextBlock_MaxHitDmg_Value.Text);
+        }
+
         private void ContextMenu_Item_ResetStat_Click(object sender, RoutedEventArgs e)
         {
             ResetStatistics();
@@ -414,14 +440,20 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             else TextBlock_TargetName.Text = currentTarget_OriginalName;
         }
 
-        private void ResetStatistics()
+        private void SetVisualDataToZero()
         {
-            lastADamageModel?.AskForReset();
             TextBlock_DMG_Value.Text = "0";
             TextBlock_Hits_Value.Text = "0";
+            TextBlock_MaxHitDmg_Value.Text = "0";
             TextBlock_T_Value.Text = "0";
             TextBlock_DPS_Value.Text = "0";
             TextBlock_DMG_PercentValue.Text = "";
+        }
+
+        private void ResetStatistics()
+        {
+            lastDamageModel?.AskForReset();
+            SetVisualDataToZero();
         }
 
         public void SettingsWindowClosed_HandleEvent(object sender, EventArgs e)
@@ -437,6 +469,30 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
         public void Dispose()
         {
             GlobalEvents.SettingsWindowClosed -= SettingsWindowClosed_HandleEvent;
+        }
+
+        public void OpenDamageChart()
+        {
+            if (lastDamageModel == null)
+                return;
+            DamageChartWindow damageChartWindow = new DamageChartWindow();
+            damageChartWindow.Init(lastDamageModel.DamageSequence.Clone(), lastTarget == null ? commonTargetName : lastTarget.originalName);
+            if (damageChartWindow.IsStartupPositionUnknown)
+            {
+                damageChartWindow.Top = UncorRTDPS_StaticSettings.DpsWindowSettings.ScreenPositionY;
+                damageChartWindow.Left = UncorRTDPS_StaticSettings.DpsWindowSettings.ScreenPositionX;
+            }
+            damageChartWindow.Show();
+        }
+
+        public Target GetLastTarget()
+        {
+            return lastTarget;
+        }
+
+        private void ContextMenu_Item_OpenChart_Click(object sender, RoutedEventArgs e)
+        {
+            OpenDamageChart();
         }
     }
 }

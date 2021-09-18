@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Tesseract;
-using UncorRTDPS.FastBitmap;
 using UncorRTDPS.DpsModels;
+using UncorRTDPS.FastBitmap;
+using UncorRTDPS.UncorOCR.BufferedBitmaps;
 using UncorRTDPS.UncorOCR.DamageOCR_Data;
 using UncorRTDPS.UncorOCR.Transformations;
-using UncorRTDPS.UncorOCR.BufferedBitmaps;
 
 namespace UncorRTDPS.UncorOCR
 {
@@ -61,7 +61,7 @@ namespace UncorRTDPS.UncorOCR
         private Brush solidBrushWhite = new SolidBrush(Color.White);
 
         //
-        private int vagueMaximumPossibleRows = -1;
+        //private int vagueMaximumPossibleRows = -1;
         //
         //optimization
         private BufferedBmps_WidthScaleOnly singleDamageBufferedBmps;
@@ -119,7 +119,7 @@ namespace UncorRTDPS.UncorOCR
 
             //create buffered optimized bitmaps
             //clear if existed
-            if (singleDamageBufferedBmps!=null)
+            if (singleDamageBufferedBmps != null)
             {
                 singleDamageBufferedBmps.Dispose();
             }
@@ -462,7 +462,7 @@ namespace UncorRTDPS.UncorOCR
             ChatRowInfo rowInfo;
             int posVertStart_dest = avgSpaceBetweenRows;
             int posHorizDraw_dest = avgCharWidth / 2;
-            for (int i=0; i < transformations_DamageOCR_Target.currentlyRowsCount; i++)
+            for (int i = 0; i < transformations_DamageOCR_Target.currentlyRowsCount; i++)
             {
                 rowInfo = transformations_DamageOCR_Target.chatRowsInfo[i];
                 if (rowInfo.ignoreThisRow)
@@ -482,7 +482,7 @@ namespace UncorRTDPS.UncorOCR
         {
             int maxWidth = 0;
             ChatRowInfo rowInfo;
-            for (int i=0; i< transformations_DamageOCR_Target.currentlyRowsCount; i++)
+            for (int i = 0; i < transformations_DamageOCR_Target.currentlyRowsCount; i++)
             {
                 rowInfo = transformations_DamageOCR_Target.chatRowsInfo[i];
                 if (rowInfo.ignoreThisRow)
@@ -534,7 +534,7 @@ namespace UncorRTDPS.UncorOCR
         {
             for (int i = 0; i < damageTargetListeners.Count; i++)
             {
-                damageTargetListeners[i].FireTargetDamage(damageTargets, posStart, posEnd, dmgTime);
+                damageTargetListeners[i].RecieveTargetDamage(damageTargets, posStart, posEnd, dmgTime);
             }
         }
 

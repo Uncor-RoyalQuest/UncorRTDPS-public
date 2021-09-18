@@ -13,10 +13,11 @@ namespace UncorRTDPS_standalone
 
         public MainWindow()
         {
-            //check if already running / doesnt have necessary privileges (admin)
+            //crude check if already running / doesnt have necessary privileges (admin)
+            string fPath = Path.GetFullPath(Path.Combine(ExecutingFolder, "h4QjwnmB0.uncor"));
             try
             {
-                fs = new FileStream("h4QjwnmB0.uncor", FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                fs = new FileStream(fPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
             catch (Exception ex)
             {
@@ -24,6 +25,7 @@ namespace UncorRTDPS_standalone
                 this.Close();
             }
 
+            string errLogPath = Path.GetFullPath(Path.Combine(ExecutingFolder, "errlog.txt"));
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
                 string ex = eventArgs.Exception.ToString();
@@ -36,13 +38,13 @@ namespace UncorRTDPS_standalone
                 {
                     return;
                 }
-                StreamWriter sw = new StreamWriter("errlog.txt", append: true);
+                StreamWriter sw = new StreamWriter(errLogPath, append: true);
                 sw.WriteLine(DateTime.Now);
                 sw.WriteLine(eventArgs.Exception.ToString());
                 sw.Flush();
                 sw.Close();
-                FileInfo fi = new FileInfo("errlog.txt");
-                if (fi.Length > 5000000L)
+                FileInfo fi = new FileInfo(errLogPath);
+                if (fi.Exists && fi.Length > 5000000L)
                 {
                     fi.Delete();
                 }
@@ -52,13 +54,29 @@ namespace UncorRTDPS_standalone
         }
 
         public static string ExecutingFolder { get; set; } = Path.GetFullPath(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+        //public static string ExecutingFolder { get; set; } = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 
         public static string systemUILanguage = System.Globalization.CultureInfo.CurrentUICulture.Name.ToLower();
 
         public void StartUncorRTDPS()
         {
             string lang = systemUILanguage.StartsWith("ru") ? "ru" : "en";
-
+            string explicitUiLangFileName = Path.GetFullPath(Path.Combine(ExecutingFolder, "lang.txt"));
+            if (File.Exists(explicitUiLangFileName))
+            {
+                try
+                {
+                    using (StreamReader streamReader = new StreamReader(explicitUiLangFileName))
+                    {
+                        string line = streamReader.ReadToEnd().Trim();
+                        if (line == "ru")
+                            lang = "ru";
+                        if (line == "en")
+                            lang = "en";
+                    }
+                }
+                catch { }
+            }
             UncorRTDPS.UncorRTDPS_Starter.InitUncorRTDPS(ExecutingFolder, lang);
             new UncorRTDPS.UncorRTDPS_Windows.StatsHoveringWindow().Show();
         }

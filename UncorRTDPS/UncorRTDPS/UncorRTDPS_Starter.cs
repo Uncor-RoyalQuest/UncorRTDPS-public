@@ -17,7 +17,7 @@ namespace UncorRTDPS
             return true;
         }
 
-        
+
         public static void InitUncorRTDPS(string resourcesPath, string uiLanguage)
         {
 
@@ -34,7 +34,7 @@ namespace UncorRTDPS
             {
                 RTDPS_Settings.UncorRTDPS_StaticSettings.Language_UI = RTDPS_Settings.UncorRTDPS_StaticSettings.Languages.English;
             }
-                
+
             //resourcesPath
             RTDPS_Settings.UncorRTDPS_StaticSettings.ResourcesPath = resourcesPath;
 
@@ -53,12 +53,17 @@ namespace UncorRTDPS
 
             //Add Window Position Service to Service Container
             Services.WindowPositionService windowPositionService = new Services.WindowPositionService();
-            windowPositionService.InitService(Path.GetFullPath(Path.Combine(resourcesPath, "src", "windowspositions.json")));
+            windowPositionService.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "windowspositions.json")) });
             Services.ServicesContainer.AddNewService("windowPositionService", windowPositionService);
+
+            //Add Window Size Service to Service Container
+            Services.WindowSize.WindowSizeService windowSizeService = new Services.WindowSize.WindowSizeService();
+            windowSizeService.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "windowssizes.json")) });
+            Services.ServicesContainer.AddNewService("windowSizeService", windowSizeService);
 
             //Add HotKeysService to Service Container
             Services.HotKeys.HotKeysStorageService hotKeysStorageService = new Services.HotKeys.HotKeysStorageService();
-            hotKeysStorageService.InitService(Path.GetFullPath(Path.Combine(resourcesPath, "src", "hotkeys.json")));
+            hotKeysStorageService.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "hotkeys.json")) });
             Services.ServicesContainer.AddNewService("hotKeysStorageService", hotKeysStorageService);
 
             //Add GlobalKeyPressListener Service to Service Container
@@ -68,11 +73,26 @@ namespace UncorRTDPS
 
             //Add SimpleAliasService Service to Service Contrainer
             Services.Aliasing.SimpleAliasService simpleAliasService = new Services.Aliasing.SimpleAliasService();
-            simpleAliasService.InitService(Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "aliases.txt")));
+            simpleAliasService.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "aliases.txt")) });
             Services.ServicesContainer.AddNewService("simpleAliasService_Mobs", simpleAliasService);
 
-            //globalKeyPressService.GlobalKeyboardHook.KeyboardPressed += (e, k) => { Trace.WriteLine(JsonSerializer.Serialize(globalKeyPressService.getRegisteredGlobalKeyboardListeners())); };
+            //Add RecentDamage Service to Service Container
+            Services.DamageHistory.RecentDamage recentDamage = new Services.DamageHistory.RecentDamage();
+            recentDamage.InitService(null);
+            Services.ServicesContainer.AddNewService("recentDamage", recentDamage);
+
+            //Add MobsIconsService Service to Service Container
+            Services.MobsIcons.MobsIconsService mobsIconsService = new Services.MobsIcons.MobsIconsService();
+            mobsIconsService.InitService(new string[] {
+                Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "icons", "link_bosses_img_target.txt")),
+                Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "icons", "bosses")),
+                Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "icons", "link_elites_img_target.txt")),
+                Path.GetFullPath(Path.Combine(resourcesPath, "src", "mobs_rtdps", "icons", "elites"))
+            });
+            Services.ServicesContainer.AddNewService("mobsIcons", mobsIconsService);
+
+            //globalKeyPressService.GlobalKeyboardHook.KeyboardPressed += (e, k) => { System.Diagnostics.Trace.WriteLine(System.Text.Json.JsonSerializer.Serialize(globalKeyPressService.GetRegisteredGlobalKeyboardListeners())); };
         }
-        
+
     }
 }

@@ -9,7 +9,7 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
 
         public void addBmpPack(BufferedBitmapPack p)
         {
-            if (bmpPacks==null)
+            if (bmpPacks == null)
             {
                 bmpPacks = new List<BufferedBitmapPack>();
             }
@@ -27,7 +27,7 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
 
         public void Dispose()
         {
-            if (bmpPacks!=null)
+            if (bmpPacks != null)
             {
                 foreach (BufferedBitmapPack p in bmpPacks)
                 {

@@ -10,7 +10,7 @@ namespace UncorRTDPS.Services
         {
             if (services.ContainsKey(serviceUniqueName))
                 return false;
-            services.Add(serviceUniqueName,service);
+            services.Add(serviceUniqueName, service);
             return true;
         }
 

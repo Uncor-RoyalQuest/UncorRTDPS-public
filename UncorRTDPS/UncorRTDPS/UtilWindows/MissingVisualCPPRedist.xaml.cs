@@ -20,7 +20,7 @@ namespace UncorRTDPS.UtilWindows
             {
                 RichTextBox_EnglishVersion.Visibility = Visibility.Visible;
             }
-            
+
             if (Environment.Is64BitOperatingSystem)
             {
                 Run_En_Bit.Text += " 64-bit.";

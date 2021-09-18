@@ -8,12 +8,12 @@ namespace UncorRTDPS.Services.GlobalKeyPressListener
         private GlobalKeyboardHook _globalKeyboardHook = null;
         private Dictionary<string, RegisterableGlobalKeyboardListener> registeredGlobalKeyboardListeners = new Dictionary<string, RegisterableGlobalKeyboardListener>();
 
-        public GlobalKeyboardHook GlobalKeyboardHook 
-        { 
-            get { return this._globalKeyboardHook; } 
+        public GlobalKeyboardHook GlobalKeyboardHook
+        {
+            get { return this._globalKeyboardHook; }
         }
 
-        public ServiceResponseStatus InitService(string param)
+        public ServiceResponseStatus InitService(string[] args)
         {
             //init hook
             try

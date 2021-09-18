@@ -25,7 +25,7 @@ namespace UncorRTDPS.DpsModels
             for (int i = lastDamageArr.Length; i < newArr.Length; i++)
                 newArr[i] = -1;
             lastDamageArr = newArr;
-            
+
         }
 
         public void ResetArrWithNewLength(int len)

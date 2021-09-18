@@ -35,7 +35,7 @@ namespace UncorRTDPS.Services.GlobalKeyPressListener
             get { return sequenceLength; }
             set { sequenceLength = value; }
         }
-        
+
         private HotKeyCombination hotKeyCombination;
         private List<DualityKey> dualityKeysSequence;
         private int posKeyStart;
@@ -73,7 +73,7 @@ namespace UncorRTDPS.Services.GlobalKeyPressListener
         {
             long utcTicksNow;
             bool isKeyFromTheSequence = false;
-           
+
             ModifierKeys modifierKeys = KeyTranslator.VkToModifier(e.KeyboardData.VirtualCode);
 
             //it is a key

@@ -4,7 +4,7 @@ namespace UncorRTDPS.UncorOCR
 {
     public class OCRSettings
     {
-        
+
         public float OCR_brightnessBarrier { get; set; }
         private bool isBrightnessBarrierSet = false;
 

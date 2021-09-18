@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace UncorRTDPS.Services.GlobalKeyPressListener
 {
@@ -50,7 +47,7 @@ namespace UncorRTDPS.Services.GlobalKeyPressListener
 
                 case RightWindowsVK:
                     return ModifierKeys.Windows;
-                    
+
             }
 
             return ModifierKeys.None;

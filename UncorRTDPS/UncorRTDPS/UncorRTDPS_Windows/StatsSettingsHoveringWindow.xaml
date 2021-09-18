@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UncorRTDPS.UncorRTDPS_Windows" 
         xmlns:SettingsPanels="clr-namespace:UncorRTDPS.UncorRTDPS_Windows.SettingsPanels"
         mc:Ignorable="d"
-        Title="RTDPS Settings" Height="300" Width="400" Topmost="True" LostKeyboardFocus="Window_LostFocus" WindowStyle="ToolWindow" SizeToContent="WidthAndHeight" Closing="Window_Closing">
+        Title="RTDPS Settings" Height="300" Width="400" Topmost="True" LostKeyboardFocus="Window_LostFocus" WindowStyle="ToolWindow" SizeToContent="WidthAndHeight" Closing="Window_Closing" Closed="Window_Closed" IsVisibleChanged="Window_IsVisibleChanged">
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="ImageButtonStyle">
             <Setter Property="Template">

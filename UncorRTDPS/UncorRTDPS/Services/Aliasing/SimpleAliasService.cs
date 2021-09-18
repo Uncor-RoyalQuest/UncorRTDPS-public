@@ -8,8 +8,11 @@ namespace UncorRTDPS.Services.Aliasing
         private Dictionary<string, string> aliasesDictionary = new Dictionary<string, string>();
         private const string keyValueSeparator = "=";
 
-        public ServiceResponseStatus InitService(string fileName_aliasesFile)
+        public ServiceResponseStatus InitService(string[] args)
         {
+            if (args == null || args.Length < 1)
+                return ServiceResponseStatus.FAILED;
+            string fileName_aliasesFile = args[0];
             try
             {
                 if (File.Exists(fileName_aliasesFile))

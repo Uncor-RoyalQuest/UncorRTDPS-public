@@ -22,7 +22,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
         private int screenWidth = (int)System.Windows.SystemParameters.PrimaryScreenWidth;
         private int screenHeight = (int)System.Windows.SystemParameters.PrimaryScreenHeight;
-        
+
         public int ResultX { get; set; } = 0;
         public int ResultY { get; set; } = 0;
         public bool ResultExists { get; set; } = false;

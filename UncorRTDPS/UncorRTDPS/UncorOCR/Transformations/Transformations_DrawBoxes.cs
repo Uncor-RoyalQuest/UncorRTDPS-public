@@ -7,7 +7,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
     public class Transformations_DrawBoxes
     {
 
-        
+
         public static void DrawBoxAroundTargets(Bitmap bmp, List<ChatRowInfo> chatRowsInfo, int currentlyRowsCount)
         {
             Graphics g = Graphics.FromImage(bmp);
@@ -41,7 +41,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
             }
             g.Dispose();
         }
-        
+
 
         public static void DrawVagueBoxAroundFillers(Bitmap bmp, int fillerLength, int averageWhiteSpace, List<ChatRowInfo> chatRowsInfo, int currentlyRowsCount)
         {
@@ -64,7 +64,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
             Graphics g = Graphics.FromImage(bmp);
             Pen pen = new Pen(Color.Green);
             ChatRowInfo row;
-            for (int r=0; r<currentlyRowsCount; r++)
+            for (int r = 0; r < currentlyRowsCount; r++)
             {
                 row = chatRowsInfo[r];
                 if (row.ignoreThisRow)
@@ -80,7 +80,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
             Graphics g = Graphics.FromImage(bmp);
             Pen pen = new Pen(Color.Green);
             ChatRowInfo row;
-            for (int r=0; r<currentlyRowsCount; r++)
+            for (int r = 0; r < currentlyRowsCount; r++)
             {
                 row = chatRowsInfo[r];
                 if (row.ignoreThisRow)
@@ -90,6 +90,6 @@ namespace UncorRTDPS.UncorOCR.Transformations
             }
             g.Dispose();
         }
-        
+
     }
 }

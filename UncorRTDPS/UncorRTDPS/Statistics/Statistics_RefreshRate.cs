@@ -6,8 +6,8 @@ namespace UncorRTDPS.Statistics
         private int eventsCount;
         private double lastRefreshRatePerSecond;
 
-        private long eventTimeStart=0;
-        private long eventTimeLast=0;
+        private long eventTimeStart = 0;
+        private long eventTimeLast = 0;
 
         private long option_RefreshDelay = 3000;
 
@@ -41,6 +41,6 @@ namespace UncorRTDPS.Statistics
         {
             return lastRefreshRatePerSecond;
         }
-        
+
     }
 }

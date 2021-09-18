@@ -9,8 +9,16 @@ namespace UncorRTDPS.Services
         private Dictionary<string, Point<double>> windowsPositions = new Dictionary<string, Point<double>>();
         private string fileName_jsonDictionaryWindowsPoints = null;
 
-        public ServiceResponseStatus InitService(string fileName_jsonDictionaryWindowsPoints)
+        /// <summary>
+        /// args[0] = fileName_jsonDictionaryWindowsPoints
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ServiceResponseStatus InitService(string[] args)
         {
+            if (args == null || args.Length < 1)
+                return ServiceResponseStatus.FAILED;
+            string fileName_jsonDictionaryWindowsPoints = args[0];
             this.fileName_jsonDictionaryWindowsPoints = fileName_jsonDictionaryWindowsPoints;
             try
             {
@@ -24,7 +32,8 @@ namespace UncorRTDPS.Services
 
                     windowsPositions = JsonSerializer.Deserialize<Dictionary<string, Point<double>>>(fileContent);
                 }
-            } catch
+            }
+            catch
             {
                 return ServiceResponseStatus.FAILED;
             }
@@ -55,7 +64,7 @@ namespace UncorRTDPS.Services
                         fs.Dispose();
                     }
                 }
-                
+
             }
             catch
             {
@@ -64,7 +73,7 @@ namespace UncorRTDPS.Services
             return ServiceResponseStatus.OK;
         }
 
-        
+
         public Point<double> GetWindowPosition(string windowUniqueId)
         {
             if (windowsPositions == null)
@@ -84,11 +93,6 @@ namespace UncorRTDPS.Services
         public void UpdateWindowPosition(string windowUniqueId, Point<double> pos)
         {
             windowsPositions[windowUniqueId] = pos;
-        }
-
-        public static WindowPositionService createWindowPositionService()
-        {
-            return new WindowPositionService();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace UncorRTDPS.DpsModels.TargetsDictionary
 {
     public enum TargetType
-    { 
-        Boss, Elite, Common 
+    {
+        Boss, Elite, Common
     }
 
     public class Target

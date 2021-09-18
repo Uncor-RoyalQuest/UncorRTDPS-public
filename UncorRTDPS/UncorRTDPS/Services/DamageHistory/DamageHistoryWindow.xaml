@@ -1,0 +1,121 @@
+﻿<Window x:Class="UncorRTDPS.Services.DamageHistory.DamageHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UncorRTDPS.Services.DamageHistory"
+        mc:Ignorable="d"
+        Title="Recent Damage" Height="450" Width="800" Closing="Window_Closing" Topmost="True" Background="#FF252526" WindowStyle="ToolWindow">
+    <Window.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#FF3C3C3C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="#FF252526"/>
+            <Setter Property="Foreground" Value="#FFABABA7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="#FF252526"/>
+            <Setter Property="Foreground" Value="#FFABABA7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="RightCell">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="10,0,10,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="EmptyButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    
+    <Grid>
+        <DataGrid Name="DataGrid_Entities" RowHeaderWidth="0" VerticalGridLinesBrush="#FF3C3C3C" HorizontalGridLinesBrush="#FF3C3C3C" ItemsSource="{Binding Entities}" IsReadOnly="True" AutoGenerateColumns="False" Background="#FF252526">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Img}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Binding="{Binding Name}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Name" Text="Name" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Binding="{Binding Damage}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Damage" Text="Damage" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Binding="{Binding DPS}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Dps" Text="DPS" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Binding="{Binding Hits}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Hits" Text="Hits" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Binding="{Binding MaxHitDmg}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_MaxHitDmg" Text="Max Hit Dmg" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Binding="{Binding BattleDuration}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Time" Text="Time" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Binding="{Binding TimeStart}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_TimeStart" Text="Time Start" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Binding="{Binding TimeEnd}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_TimeEnd" Text="Time End" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_Details" Text="Details" Padding="5,0,5,0"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content=">>" Click="Button_Click" Style="{StaticResource EmptyButton}" Foreground="#FFABABA7" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

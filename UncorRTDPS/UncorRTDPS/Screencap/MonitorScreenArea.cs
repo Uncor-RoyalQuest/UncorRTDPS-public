@@ -31,7 +31,7 @@ namespace UncorRTDPS
         private double rpsLimit_Active;
         private double rpsLimit_Inactive;
         private long switchTimespanActiveInactive = 30000;
-        
+
         public MonitorScreenArea()
         {
             X = 0;
@@ -104,7 +104,7 @@ namespace UncorRTDPS
             long lastTimeConsumed_AllOk = 0;
             long sleepFor;
 
-            double currentRpsLimit ;
+            double currentRpsLimit;
             long timeLastActive = 0;
             while (true)
             {
@@ -113,12 +113,12 @@ namespace UncorRTDPS
                     e.Cancel = true;
                     break;
                 }
-                
+
                 timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 monitoringTaskRes = MonitoringTask();
                 timeEnd = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-                statistics_TimeConsumptionPerEvent.AddEvent(1,timeEnd - timeStart, timeEnd);
+                statistics_TimeConsumptionPerEvent.AddEvent(1, timeEnd - timeStart, timeEnd);
 
                 /// "0" - all ok, function fully executed
                 /// "2" - damage now and prev is equal
@@ -129,7 +129,7 @@ namespace UncorRTDPS
                 /// "-6" - no new damage, only old
                 /// "-7" - cant get valid row start for damage
                 /// "-8" - cant find fitting bitmap for target[i]
-                
+
                 if (monitoringTaskRes == 0)
                 {
                     timeLastActive = timeEnd;
@@ -164,11 +164,11 @@ namespace UncorRTDPS
 
         private void PrepareForMonitoringTask()
         {
-            if (g!=null)
+            if (g != null)
             {
                 g.Dispose();
             }
-            if (bitmap!=null)
+            if (bitmap != null)
             {
                 bitmap.Dispose();
             }

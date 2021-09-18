@@ -4,5 +4,6 @@
     {
         void ActivateMenuPanel();
         void DeactivateMenuPanel();
+        string GetMenuName();
     }
 }

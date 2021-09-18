@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
@@ -10,6 +8,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
     /// </summary>
     public partial class S_AboutProgram : UserControl, IMenuPanel
     {
+        private string menu_name = "about";
+
         public S_AboutProgram()
         {
             InitializeComponent();
@@ -38,6 +38,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
         public void DeactivateMenuPanel()
         {
             this.Visibility = Visibility.Hidden;
+        }
+
+        public string GetMenuName()
+        {
+            return this.menu_name;
         }
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)

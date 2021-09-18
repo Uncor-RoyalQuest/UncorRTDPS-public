@@ -9,6 +9,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
     /// </summary>
     public partial class S_Performance : UserControl, IMenuPanel, IDisposable
     {
+        private string menu_name = "performance";
+
         public S_Performance()
         {
             InitializeComponent();
@@ -31,11 +33,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
                 Environment.NewLine
                 +
                 RTDPS_Settings.UncorRTDPS_Localization.GetLocaleGuiVal("guiUpdPerSecLimit_tooltip_1")
-                + 
+                +
                 Environment.NewLine
                 +
                 RTDPS_Settings.UncorRTDPS_Localization.GetLocaleGuiVal("guiUpdPerSecLimit_tooltip_2")
-                + 
+                +
                 Environment.NewLine
                 +
                 RTDPS_Settings.UncorRTDPS_Localization.GetLocaleGuiVal("guiUpdPerSecLimit_tooltip_3");
@@ -89,8 +91,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
             double rpsLimitActive = Slider_UpdateCountLimiter_Value.Value;
             double rpsLimitInactive = Slider_UpdateCountLimiterInactive_Value.Value;
-            
-            
+
+
             if (double.IsNaN(dmgSepBoss) ||
                 double.IsNaN(dmgSepElite) ||
                 double.IsNaN(dmgSepCommon) ||
@@ -142,6 +144,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
             TextBlock_Comment_ApplyNewSettings.Text = null;
             Button_ApplyNewSettings.Content = null;
+        }
+
+        public string GetMenuName()
+        {
+            return this.menu_name;
         }
     }
 }

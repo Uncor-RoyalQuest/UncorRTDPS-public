@@ -1,0 +1,156 @@
+﻿<Window x:Class="UncorRTDPS.DamageCharts.DamageChartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UncorRTDPS.DamageCharts"
+        mc:Ignorable="d"
+        Title="Damage Charts" Height="450" Width="800" WindowStyle="ToolWindow" Loaded="Window_Loaded" Closing="Window_Closing" Topmost="True">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" x:Key="ImageButtonStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Margin="5">
+
+            <Border BorderThickness="1" BorderBrush="Gainsboro">
+                <StackPanel Background="#FF252526" HorizontalAlignment="Stretch" Orientation="Vertical" Margin="0">
+                    <TextBlock Name="TextBlock_Menu" Text="Menu:" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="16"/>
+
+                    <Grid Name="Grid_Menu" HorizontalAlignment="Center" Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="15"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Name="TextBlock_Arrow_0" Text=">" Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Name="TextBlock_Arrow_1" Text=">" Grid.Row="1" Grid.Column="0" Foreground="White" FontSize="16" FontWeight="Bold" Visibility="Collapsed"/>
+
+                        <Button Name="Button_Menu_Option_0" Style="{StaticResource ImageButtonStyle}" Grid.Row="0" Grid.Column="1" Click="Button_Menu_Option_0_Click">
+                            <TextBlock Name="TextBlock_Menu_Option_0" Text="Damage/Time" Foreground="White" FontSize="16"/>
+                        </Button>
+
+                        <Button Name="Button_Menu_Option_1" Style="{StaticResource ImageButtonStyle}" Grid.Row="1" Grid.Column="1" Click="Button_Menu_Option_1_Click">
+                            <TextBlock Name="TextBlock_Menu_Option_1" Text="Damage/Hit" Foreground="White" FontSize="16"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <RichTextBox Name="RichTextBox_BasicInfo" DockPanel.Dock="Top" Width="150" Margin="0,10,0,0" IsReadOnly="True" Foreground="#FFABABA7" BorderThickness="0">
+                <FlowDocument>
+                    <Paragraph TextAlignment="Center" Margin="0">
+                        <Bold>
+                            <Run Name="GeneralInfo_Title">General info:</Run>
+                        </Bold>
+                    </Paragraph>
+                    <Paragraph Margin="0,5,0,0">
+                        <Run Name="GeneralInfo_Damage">Damage:</Run>
+                        <Run Name="GeneralInfo_Damage_Value">{dmg}</Run>
+                        
+                        <LineBreak/>
+                        <Run Name="GeneralInfo_Time">Time:</Run>
+                        <Run Name="GeneralInfo_Time_Value">{time} | {time in hh:mm:ss}</Run>
+
+                        <LineBreak/>
+                        <Run Name="GeneralInfo_Hits">Hits:</Run>
+                        <Run Name="GeneralInfo_Hits_Value">{hits}</Run>
+                    </Paragraph>
+                    
+                </FlowDocument>
+            </RichTextBox>
+
+            <RichTextBox Name="RichTextBox_DamageTime" Width="150" Margin="0,10,0,0" IsReadOnly="True" Foreground="#FFABABA7" BorderThickness="0">
+                <FlowDocument>
+                    <Paragraph TextAlignment="Center" Margin="0">
+                        <Bold>
+                            <Run Name="DamageTimeInfo_Title">Damage/Time:</Run>
+                        </Bold>
+                    </Paragraph>
+                    <Paragraph Margin="0,5,0,0">
+                        
+                        <Run Name="DamageTimeInfo_Dps" ToolTip="DPS - average damage per second">DPS:</Run>
+                        <Run Name="DamageTimeInfo_Dps_Value">{dps}</Run>
+                        
+                        <LineBreak/>
+                        
+                        <Run Name="DamageTimeInfo_MaxDPS" ToolTip="Max DPS - maximum damage per second">Max DPS:</Run>
+                        <Run Name="DamageTimeInfo_MaxDPS_Value">{max dps}</Run>
+                        
+                        <LineBreak/>
+                        
+                        <Run Name="DamageTimeInfo_MinDPS" ToolTip="Min DPS - minimum damage per second">Min DPS:</Run>
+                        <Run Name="DamageTimeInfo_MinDPS_Value">{min dps}</Run>
+                    </Paragraph>
+                    <Paragraph Margin="0,5,0,0">
+                        <Run Name="DamageTimeInfo_DpsExplanation">*DPS - damage per second</Run>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            
+            
+            <RichTextBox Name="RichTextBox_DamageHit" Width="150" Margin="0,10,0,0" IsReadOnly="True" Foreground="#FFABABA7" Visibility="Collapsed" BorderThickness="0">
+                <FlowDocument>
+                    <Paragraph TextAlignment="Center" Margin="0">
+                        <Bold>
+                            <Run Name="DamageHitInfo_Title">Damage/Hit:</Run>
+                        </Bold>
+                    </Paragraph>
+                    <Paragraph Margin="0,5,0,0">
+                        <Run Name="DamageHitInfo_Dph" ToolTip="DPH - average damage per hit">DPH:</Run>
+                        <Run Name="DamageHitInfo_Dph_Value">{dph}</Run>
+                        <LineBreak/>
+
+                        <Run Name="DamageHitInfo_MaxHit" ToolTip="Max Hit - maximum damage per hit">Max Hit:</Run>
+                        <Run Name="DamageHitInfo_MaxHit_Value">{max hit}</Run>
+
+                        <LineBreak/>
+
+                        <Run Name="DamageHitInfo_MinHit" ToolTip="Min Hit - minimum damage per hit">Min Hit:</Run>
+                        <Run Name="DamageHitInfo_MinHit_Value">{min hit}</Run>
+                    </Paragraph>
+                    
+                    <Paragraph Margin="0,5,0,0">
+                        <Run Name="DamageHitInfo_DphExplanation">DPH - damage per hit</Run>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+
+            <StackPanel Name="StackPanel_CheckBoxes" Orientation="Vertical" Margin="0,20,0,0">
+                <CheckBox Name="CheckBox_ShowDPS" Content="Show Damage Per Second" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_ShowDPS_Checked" Unchecked="CheckBox_ShowDPS_Unchecked"/>
+                <CheckBox Name="CheckBox_ShowAvgHitDamage" Content="Show Average Hit Damage" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_ShowAvgHitDamage_Checked" Unchecked="CheckBox_ShowAvgHitDamage_Unchecked"/>
+                <CheckBox Name="CheckBox_ShowMax" Content="Show Max" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_ShowMax_Checked" Unchecked="CheckBox_ShowMax_Unchecked"/>
+                <CheckBox Name="CheckBox_ShowMin" Content="Show Min" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_ShowMin_Checked" Unchecked="CheckBox_ShowMin_Unchecked"/>
+                <CheckBox Name="CheckBox_ShowLegend" Content="Show Legend" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_ShowLegend_Checked" Unchecked="CheckBox_ShowLegend_Unchecked"/>
+                <CheckBox Name="CheckBox_EnableHighlightByCursor" Content="Enable Highlight By Cursor" Foreground="#FFABABA7" IsChecked="True" Checked="CheckBox_EnableHighlightByCursor_Checked" Unchecked="CheckBox_EnableHighlightByCursor_Unchecked"/>
+            </StackPanel>
+            
+        </StackPanel>
+
+        <WpfPlot Name="Chart_DamageByHits" Grid.Row="0" Grid.Column="1" MouseMove="Chart_DamageByHits_MouseMove" Visibility="Collapsed"/>
+        <WpfPlot Name="Chart_DamageByTime" Grid.Row="0" Grid.Column="1" MouseMove="Chart_DamageByTime_MouseMove"/>
+
+    </Grid>
+</Window>

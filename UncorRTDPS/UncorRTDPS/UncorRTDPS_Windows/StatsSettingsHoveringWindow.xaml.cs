@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using UncorRTDPS.Services;
+using UncorRTDPS.UncorRTDPS_Windows.EventAware;
 using UncorRTDPS.UncorRTDPS_Windows.SettingsPanels;
 
 namespace UncorRTDPS.UncorRTDPS_Windows
@@ -14,7 +12,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
     /// <summary>
     /// Interaction logic for StatsSettingsHoveringWindow.xaml
     /// </summary>
-    public partial class StatsSettingsHoveringWindow : Window, IParentTopmostListener, IDisposable
+    public partial class StatsSettingsHoveringWindow : Window, IParentTopmostListener, IDisposable, ICloseAllWindowsButMainAware
     {
         private const string name = "settingsWindow_000";
 
@@ -65,13 +63,15 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             {
                 windowPositionService = service as WindowPositionService;
                 Point<double> p = windowPositionService.GetWindowPosition(name);
-                if (p!=null)
+                if (p != null)
                 {
                     this.Top = p.Y;
                     this.Left = p.X;
                     IsStartupPositionUnknown = false;
                 }
             }
+
+            (this as ICloseAllWindowsButMainAware).Register_CloseAllWindowsButMainAware();
         }
 
         public void InitLocaleText()
@@ -97,8 +97,12 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 this.Activate();
         }
 
+        private bool isDisposed = false;
         public void Dispose()
         {
+            if (isDisposed)
+                return;
+            isDisposed = true;
             Panel_Settings_CaptureArea.UnregisterIParentTopmostListener(this);
 
             TextBlock_CaptureArea.Text = null;
@@ -145,11 +149,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                     menuArrows[i].Text = notSelectedIndicator;
                 }
             }
+
+            if (menuPanels[o].GetMenuName() != "hotkeys" && nowSelectedOption == MenuOptions.HotKeys)
+            {
+                HotkeyMenuUnselected();
+            }
         }
 
         private void Button_Menu_CaptureArea_Click(object sender, RoutedEventArgs e)
         {
-            if (nowSelectedOption!=MenuOptions.CaptureArea)
+            if (nowSelectedOption != MenuOptions.CaptureArea)
             {
                 ActivateMenuOptionAndDeactivateOthers(0);
                 nowSelectedOption = MenuOptions.CaptureArea;
@@ -198,6 +207,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             {
                 windowPositionService.UpdateWindowPosition(name, new Point<double>(this.Left, this.Top));
             }
+            Dispose();
         }
 
         private void Window_LostFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -211,7 +221,44 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             {
                 ActivateMenuOptionAndDeactivateOthers(4);
                 nowSelectedOption = MenuOptions.HotKeys;
+
+                HotkeyMenuSelected();
             }
+        }
+
+        private void HotkeyMenuSelected()
+        {
+            GlobalEvents.InvokeHotkeysSettingsOpened(this, null);
+        }
+
+        private void HotkeyMenuUnselected()
+        {
+            GlobalEvents.InvokeHotkeysSettingsClosed(this, null);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            (this as ICloseAllWindowsButMainAware).Unregister_CloseAllWindowsButMainAware();
+            if (nowSelectedOption == MenuOptions.HotKeys)
+            {
+                GlobalEvents.InvokeHotkeysSettingsClosed(this, null);
+            }
+            GlobalEvents.InvokeSettingsWindowClosed(this, null);
+        }
+
+        private bool openedEventFired = false;
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!openedEventFired && this.Visibility == Visibility.Visible)
+            {
+                openedEventFired = true;
+                GlobalEvents.InvokeSettingsWindowOpened(this, null);
+            }
+        }
+
+        public void CloseAllWindowsButMainAware_HandleEvent(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

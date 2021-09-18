@@ -24,12 +24,12 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
                 bitmapGraphics = null;
             }
 
-            if (bitmapSize!=null)
+            if (bitmapSize != null)
             {
                 bitmapSize = null;
             }
 
-            if (bitmap!=null)
+            if (bitmap != null)
             {
                 bitmap.Dispose();
                 bitmap = null;

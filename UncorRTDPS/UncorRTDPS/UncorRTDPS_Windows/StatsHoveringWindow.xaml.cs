@@ -5,12 +5,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using UncorRTDPS.DpsModels;
 using UncorRTDPS.RTDPS_Settings;
-using UncorRTDPS.UncorRTDPS_Windows.DpsPanel;
-using UncorRTDPS.Util;
 using UncorRTDPS.Services;
 using UncorRTDPS.Services.GlobalKeyPressListener;
 using UncorRTDPS.Services.HotKeys;
+using UncorRTDPS.Services.WindowSize;
 using UncorRTDPS.UncorOCR;
+using UncorRTDPS.UncorRTDPS_Windows.DpsPanel;
+using UncorRTDPS.Util;
 
 namespace UncorRTDPS.UncorRTDPS_Windows
 {
@@ -23,10 +24,14 @@ namespace UncorRTDPS.UncorRTDPS_Windows
         private const int widthNheight = 12;
         private const int widthNheight2 = 14;
         private const int widthNheight3 = 10;
+        private const int widthNheight_DamageHistory = 16;
 
         private Brush defaultForeground = new SolidColorBrush(Color.FromArgb(255, 171, 171, 167));
         private Brush selectedForeground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 55));
 
+
+        private const string name = "StatsMainWindow";
+        private WindowSizeService windowSizeService = null;
         public StatsHoveringWindow()
         {
             //Test.test();
@@ -35,16 +40,36 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             InitImages();
             InitLocaleText();
 
+            Service service = ServicesContainer.GetService("windowSizeService");
+            if (service != null && service is WindowSizeService)
+            {
+                windowSizeService = service as WindowSizeService;
+                Size<double> s = windowSizeService.GetWindowPosition(name);
+                if (s != null)
+                {
+                    this.Width = s.Width;
+                }
+            }
+
             if (UncorRTDPS_Config.getConfigVal("prohibitTransparency") == "0")
             {
                 this.AllowsTransparency = true;
             }
 
             windowDispatcher = Application.Current.Dispatcher;
-            optimizer_DamageInfoSequence = new Optimizer_DamageInfoSequence(StackPanel_DamageInfoSequence);
+            manager_DamageInfoSequence = new Manager_DamageInfoSequence(StackPanel_DamageInfoSequence);
             RefreshWindowOptions();
             UncorRTDPS_StaticSettings.RegisterDPSWindowSettingsChangedListener(this);
 
+            GlobalEvents.SettingsWindowOpened += SettingsWindowOpened_HandleEvent;
+            GlobalEvents.SettingsWindowClosed += SettingsWindowClosed_HandleEvent;
+
+            GlobalEvents.HotkeysSettingsOpened += HotkeysSettingsOpened_HandleEvent;
+            GlobalEvents.HotkeysSettingsClosed += HotkeysSettingsClosed_HandleEvent;
+
+            RegisterHotkeys_Monitoring();
+            RegisterHotkeys_WindowsOpenClose();
+            RegisterHotkeys_DamageInfoManager();
         }
 
         public void InitImages()
@@ -63,6 +88,9 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
             Image_CloseRTDPS.Source = UncorRTDPS_StaticSettings.BiWClose;
             Image_CloseRTDPS.Width = widthNheight2;
+
+            Image_DamageHistory.Source = UncorRTDPS_StaticSettings.BiDamageHistory;
+            Image_DamageHistory.Width = widthNheight_DamageHistory;
         }
 
         public void InitLocaleText()
@@ -86,10 +114,10 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             StatA_MLoad.ToolTip = UncorRTDPS_Localization.GetLocaleGuiVal("guiOcrStat_MLoad_tooltip");
         }
 
-        public bool IsHotKeysRegistered { get; private set; } = false;
-        private void RegisterHotkeys()
+        public bool IsHotKeysRegistered_DamageInfoManager { get; private set; } = false;
+        private void RegisterHotkeys_DamageInfoManager()
         {
-            if (IsHotKeysRegistered)
+            if (IsHotKeysRegistered_DamageInfoManager)
                 return;
 
             GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
@@ -100,81 +128,131 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             if (hotKeysStorageService == null)
                 return;
 
-            
-            //---
-            //create hotkey StartMonitoring
-            HotKeyCombination hotKeyCombination_StartMonitoring = hotKeysStorageService.GetCombinationForName("startMonitoring");
-            if (hotKeyCombination_StartMonitoring != null)
-            {
+            //Open First Non Common Detailed Damage
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_OpenFirstNonCommonDetailedDamage, () => manager_DamageInfoSequence?.ShowFirstNonCommonTargetDetailedDamage());
 
-                KeyPressSequence keyPressSequence = new KeyPressSequence(hotKeyCombination_StartMonitoring);
-                keyPressSequence.DelegatedAction = () =>
-                {
-                    StartRTDPS();
-                };
 
-                //register hotkey StartMonitoring
-                if (keyPressSequence.SequenceLength > 0)
-                {
-                    globalKeyPressService.RegisterEventHandler_OnKeyPressed(uid + "startMonitoring", keyPressSequence);
-                }
-            }
-            
-            //---
-            //create hotkey StopMonitoring
-            HotKeyCombination hotKeyCombination_StopMonitoring = hotKeysStorageService.GetCombinationForName("stopMonitoring");
-            if (hotKeyCombination_StopMonitoring != null)
-            {
-
-                KeyPressSequence keyPressSequence = new KeyPressSequence(hotKeyCombination_StopMonitoring);
-                keyPressSequence.DelegatedAction = () =>
-                {
-                    StopRTDPS();
-                };
-
-                //register hotkey StopMonitoring
-                if (keyPressSequence.SequenceLength > 0)
-                {
-                    globalKeyPressService.RegisterEventHandler_OnKeyPressed(uid + "stopMonitoring", keyPressSequence);
-                }
-            }
-            
-            //---
-            //create hotkey ToggleMonitoring
-            HotKeyCombination hotKeyCombination_ToggleMonitoring = hotKeysStorageService.GetCombinationForName("toggleMonitoring");
-            if (hotKeyCombination_ToggleMonitoring != null)
-            {
-
-                KeyPressSequence keyPressSequence = new KeyPressSequence(hotKeyCombination_ToggleMonitoring);
-                keyPressSequence.DelegatedAction = () =>
-                {
-                    ToggleRTDPS();
-                };
-
-                //register hotkey ToggleMonitoring
-                if (keyPressSequence.SequenceLength > 0)
-                {
-                    globalKeyPressService.RegisterEventHandler_OnKeyPressed(uid + "toggleMonitoring", keyPressSequence);
-                }
-            }
-            
-            IsHotKeysRegistered = true;
+            IsHotKeysRegistered_DamageInfoManager = true;
         }
 
-        private void UnregisterHotkeys()
+        private void UnregisterHotkeys_DamageInfoManager()
         {
-            if (!IsHotKeysRegistered)
+            if (!IsHotKeysRegistered_DamageInfoManager)
                 return;
 
             GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
             if (globalKeyPressService == null)
                 return;
 
-            globalKeyPressService.UnregisterEventHandler_OnKeyPressed(uid + "startMonitoring");
-            globalKeyPressService.UnregisterEventHandler_OnKeyPressed(uid + "stopMonitoring");
-            globalKeyPressService.UnregisterEventHandler_OnKeyPressed(uid + "toggleMonitoring");
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_OpenFirstNonCommonDetailedDamage);
 
-            IsHotKeysRegistered = false;
+
+            IsHotKeysRegistered_DamageInfoManager = false;
+        }
+
+        public bool IsHotKeysRegistered_Monitoring { get; private set; } = false;
+        private void RegisterHotkeys_Monitoring()
+        {
+            if (IsHotKeysRegistered_Monitoring)
+                return;
+
+            GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
+            if (globalKeyPressService == null)
+                return;
+
+            HotKeysStorageService hotKeysStorageService = ServicesContainer.GetService("hotKeysStorageService") as HotKeysStorageService;
+            if (hotKeysStorageService == null)
+                return;
+
+            //StartMonitoring
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_StartMonitoring, () => StartRTDPS());
+            //StopMonitoring
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_StopMonitoring, () => StopRTDPS());
+            //ToggleMonitoring
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_ToggleMonitoring, () => ToggleRTDPS());
+
+
+            IsHotKeysRegistered_Monitoring = true;
+        }
+
+        private void UnregisterHotkeys_Monitoring()
+        {
+            if (!IsHotKeysRegistered_Monitoring)
+                return;
+
+            GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
+            if (globalKeyPressService == null)
+                return;
+
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_StartMonitoring);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_StopMonitoring);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_ToggleMonitoring);
+
+            IsHotKeysRegistered_Monitoring = false;
+        }
+
+        public bool IsHotKeysRegistered_WindowsOpenClose { get; private set; } = false;
+        private void RegisterHotkeys_WindowsOpenClose()
+        {
+            if (IsHotKeysRegistered_WindowsOpenClose)
+                return;
+
+            GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
+            if (globalKeyPressService == null)
+                return;
+
+            HotKeysStorageService hotKeysStorageService = ServicesContainer.GetService("hotKeysStorageService") as HotKeysStorageService;
+            if (hotKeysStorageService == null)
+                return;
+
+            //Open Settings
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_OpenSettings, () => OpenSettingsWindow());
+            //Close Settings
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_CloseSettings, () => CloseSettingsWindow());
+            //Toggle Settings
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_ToggleSettings, () => ToggleSettingsWindow());
+
+            //Open DamageHistoryWindow
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_OpenDamageHistory, () => OpenDamageHistoryWindow());
+            //Close DamageHistoryWindow
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_CloseDamageHistory, () => CloseDamageHistoryWindow());
+            //Toggle DamageHistoryWindow
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_ToggleDamageHistory, () => ToggleDamageHistoryWindow());
+
+            //Close all except main
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_CloseAllButMain, () => GlobalEvents.InvokeCloseAllWindowsButMain(this, null));
+            //Close all charts
+            HotkeyActionRegistrator.RegisterActionToHotKey(globalKeyPressService, hotKeysStorageService, uid, CombinationNames.CombinationName_CloseAllCharts, () => GlobalEvents.InvokeCloseAllWindowsCharts(this, null));
+
+            IsHotKeysRegistered_WindowsOpenClose = true;
+        }
+
+        private void UnregisterHotkeys_WindowsOpenClose()
+        {
+            if (!IsHotKeysRegistered_WindowsOpenClose)
+                return;
+
+            GlobalKeyPressService globalKeyPressService = ServicesContainer.GetService("globalKeyPressService") as GlobalKeyPressService;
+            if (globalKeyPressService == null)
+                return;
+
+            //Settings window open/close/toggle
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_OpenSettings);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_CloseSettings);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_ToggleSettings);
+
+            //DamageHistoryWindow open/close/toggle
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_OpenDamageHistory);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_CloseDamageHistory);
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_ToggleDamageHistory);
+
+            //Close all except main
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_CloseAllButMain);
+
+            //Close all charts
+            HotkeyActionRegistrator.UnregisterActionFromHotKey(globalKeyPressService, uid, CombinationNames.CombinationName_CloseAllCharts);
+
+            IsHotKeysRegistered_WindowsOpenClose = false;
         }
 
         private bool IsRTDPSRunning()
@@ -189,16 +267,12 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             ToggleRTDPS();
         }
 
-        private void ImageButton_Settings_Click(object sender, RoutedEventArgs e)
-        {
-            UnregisterHotkeys();
 
-            bool resumeRTDPSAfterSettingsIfWasRunning = false;
-            if (IsRTDPSRunning())
-            {
-                resumeRTDPSAfterSettingsIfWasRunning = true;
-                ToggleRTDPS();
-            }
+        private StatsSettingsHoveringWindow statsSettingsWindow = null;
+        private void OpenSettingsWindow()
+        {
+            if (statsSettingsWindow != null)
+                return;
 
             StatsSettingsHoveringWindow statsSettingsHoveringWindow = new StatsSettingsHoveringWindow();
             if (statsSettingsHoveringWindow.IsStartupPositionUnknown)
@@ -206,17 +280,37 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 statsSettingsHoveringWindow.Left = this.Left;
                 statsSettingsHoveringWindow.Top = this.Top;
             }
+            this.statsSettingsWindow = statsSettingsHoveringWindow;
             statsSettingsHoveringWindow.ShowDialog();
             statsSettingsHoveringWindow.Dispose();
 
-            GlobalEvents.InvokeSettingsWindowClosed(this,null);
-
-            RegisterHotkeys();
-            optimizer_DamageInfoSequence.RefreshHotkeysOnPanels();
-
             GC.Collect();
-            if (resumeRTDPSAfterSettingsIfWasRunning)
-                ToggleRTDPS();
+            this.statsSettingsWindow = null;
+        }
+
+        private void CloseSettingsWindow()
+        {
+            if (statsSettingsWindow == null)
+                return;
+            statsSettingsWindow.Close();
+            statsSettingsWindow = null;
+        }
+
+        private void ToggleSettingsWindow()
+        {
+            if (statsSettingsWindow == null)
+            {
+                OpenSettingsWindow();
+            }
+            else
+            {
+                CloseSettingsWindow();
+            }
+        }
+
+        private void ImageButton_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            OpenSettingsWindow();
 
         }
 
@@ -288,9 +382,6 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 timerStatsUpd_RTDPS.Dispose();
             }
 
-            bossesToShow_SortBuffer = new DamageTarget_DamageModel[UncorRTDPS_StaticSettings.DpsWindowSettings.BossesLimit_mode_1];
-            elitesToShow_SortBuffer = new DamageTarget_DamageModel[UncorRTDPS_StaticSettings.DpsWindowSettings.ElitesLimit_mode_1];
-
             tcbStatsUpd_RTDPS = new TimerCallback(TimerCallbackFunc_RTDPS);
             long timerStatsUpdPeriodMS_RTDPS = UncorRTDPS_StaticSettings.DpsWindowSettings.VisualRefreshDelay;
             timerStatsUpd_RTDPS = new Timer(tcbStatsUpd_RTDPS, 0, timerStatsUpdPeriodMS_RTDPS, timerStatsUpdPeriodMS_RTDPS);
@@ -312,7 +403,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
         public void TimerUpdateFuntion_RTDPS()
         {
-            if (dpsModel == null)
+            if (damagePoolManager == null)
                 return;
 
 
@@ -329,7 +420,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             }
 
             //OCR STAT
-            
+
             if (ocrStatEnabled)
             {
                 StatS_Failures_Value.Text = String.Format("{0:0.##}", damageOCR.FailureRecognitionProportion * 100);
@@ -342,41 +433,41 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 StatA_MLoad_Value.Text = String.Format("{0:0.##}", damageOCR.MaxDamageLoad * 100);
 
             }
-            
+
         }
 
-        private Optimizer_DamageInfoSequence optimizer_DamageInfoSequence;
+        private Manager_DamageInfoSequence manager_DamageInfoSequence;
         public void UpdateDpsInfo_DamageViewMode_0()
         {
             //try get active boss
-            DamageTarget_DamageModel dt_dm = dpsModel.GetMostActiveBoss(5000);
+            DamageModel dt_dm = damagePoolManager.GetMostActiveBoss(5000);
             if (dt_dm == null)
             {
                 //try get active elite
-                dt_dm = dpsModel.GetMostActiveElite(5000);
+                dt_dm = damagePoolManager.GetMostActiveElite(5000);
                 if (dt_dm == null)
                 {
                     //just get common
-                    dt_dm = dpsModel.commonTarget_DamageModel;
+                    dt_dm = damagePoolManager.CommonTarget;
                 }
             }
 
-            optimizer_DamageInfoSequence.UpdateDamageInfo(dt_dm);
+            manager_DamageInfoSequence.UpdateDamageInfo(dt_dm);
         }
 
 
-        public static void InsertionSortByShift(DamageTarget_DamageModel[] arr, int n)
+        public void InsertionSortByShift(DamageModel[] arr, int n)
         {
-            DamageTarget_DamageModel key;
+            DamageModel key;
             long keyVal;
             int i, j;
             for (i = 1; i < n; i++)
             {
                 key = arr[i];
-                keyVal = key.GetLastDamageTime();
+                keyVal = key.TimeLast;
                 j = i - 1;
 
-                while (j >= 0 && arr[j].GetLastDamageTime() < keyVal)
+                while (j >= 0 && arr[j].TimeLast < keyVal)
                 {
                     arr[j + 1] = arr[j];
                     j = j - 1;
@@ -390,83 +481,55 @@ namespace UncorRTDPS.UncorRTDPS_Windows
         private int elitesLimit_damageViewMode_1 = 2;
         private bool showCommonMobsDps_damageViewMode_1 = true;
 
-        private DamageTarget_DamageModel[] bossesToShow_SortBuffer;
-        private DamageTarget_DamageModel[] elitesToShow_SortBuffer;
-
         public void UpdateDpsInfo_DamageViewMode_1()
         {
             int posPanel = 0;
-            DamageTarget_DamageModel dt_dm;
+            DamageModel damageModel;
 
-            //BOSSES
-
-            //adjust buffer array size
-            if (bossesToShow_SortBuffer.Length < dpsModel.activePool_Bosses_CurrentLength)
-                bossesToShow_SortBuffer = new DamageTarget_DamageModel[dpsModel.activePool_Bosses_CurrentLength + (dpsModel.activePool_Bosses_CurrentLength / 2)];
-            
-            //iter through all active bosses and add them to array
-            int countBosses = 0;
-            for (int i = 0; i < dpsModel.activePool_Bosses_CurrentLength; i++)
-            {
-                dt_dm = dpsModel.activePool_Bosses[i];
-                if (dt_dm.IsActive)
-                {
-                    bossesToShow_SortBuffer[countBosses] = dt_dm;
-                    countBosses += 1;
-                }
-            }
+            //------------BOSSES----------
+            int bossesLen;
+            DamageModel[] bossesArr;
+            (bossesLen, bossesArr) = damagePoolManager.GetActiveBosses_BufferedArray();
 
             //sort bosses array by the last dmg time
-            InsertionSortByShift(bossesToShow_SortBuffer, countBosses);
+            if (bossesLen > 1)
+                InsertionSortByShift(bossesArr, bossesLen);
 
             //add bosses to corresponding pannels depending on
-            for (int i = 0; i < bossesLimit_damageViewMode_1 && i < countBosses; i++)
+            for (int i = 0; i < bossesLimit_damageViewMode_1 && i < bossesLen; i++)
             {
-                optimizer_DamageInfoSequence.UpdateDamageInfo(bossesToShow_SortBuffer[i], posPanel);
-                posPanel += 1;
-            }
-
-            //ELITES
-            
-            //adjust buffer array size
-            if (elitesToShow_SortBuffer.Length < dpsModel.activePool_Elites_CurrentLength)
-                elitesToShow_SortBuffer = new DamageTarget_DamageModel[dpsModel.activePool_Elites_CurrentLength + (dpsModel.activePool_Elites_CurrentLength / 2)];
-            
-            //iter through active elites and add them to array
-            int countElites = 0;
-            for (int i = 0; i < dpsModel.activePool_Elites_CurrentLength; i++)
-            {
-                dt_dm = dpsModel.activePool_Elites[i];
-                if (dt_dm.IsActive)
-                {
-                    elitesToShow_SortBuffer[countElites] = dt_dm;
-                    countElites += 1;
-                }
-            }
-
-            //sort bosses array by the last dmg time
-            InsertionSortByShift(elitesToShow_SortBuffer, countElites);
-
-            //add bosses to corresponding pannels
-            for (int i = 0; i < elitesLimit_damageViewMode_1 && i < countElites; i++)
-            {
-                optimizer_DamageInfoSequence.UpdateDamageInfo(elitesToShow_SortBuffer[i], posPanel);
+                manager_DamageInfoSequence.UpdateDamageInfo(bossesArr[i], posPanel);
                 posPanel += 1;
             }
 
 
+            //-----------ELITES-----------
+            int elitesLen;
+            DamageModel[] elitesArr;
+            (elitesLen, elitesArr) = damagePoolManager.GetActiveElites_BufferedArray();
 
-            //COMMON
-            dt_dm = dpsModel.commonTarget_DamageModel;
-            if (dt_dm.IsActive && showCommonMobsDps_damageViewMode_1)
+            //sort elits array by the last dmg time
+            if (elitesLen > 1)
+                InsertionSortByShift(elitesArr, elitesLen);
+
+            //add elites to corresponding pannels
+            for (int i = 0; i < elitesLimit_damageViewMode_1 && i < elitesLen; i++)
             {
-                optimizer_DamageInfoSequence.UpdateDamageInfo(dt_dm, posPanel);
+                manager_DamageInfoSequence.UpdateDamageInfo(elitesArr[i], posPanel);
+                posPanel += 1;
+            }
+
+            //----------COMMON------------
+            damageModel = damagePoolManager.CommonTarget;
+            if (damageModel.IsActive && showCommonMobsDps_damageViewMode_1)
+            {
+                manager_DamageInfoSequence.UpdateDamageInfo(damageModel, posPanel);
                 posPanel += 1;
             }
 
             //visibility setup
-            optimizer_DamageInfoSequence.SetPanelsVisibility(0, posPanel, Visibility.Visible);
-            optimizer_DamageInfoSequence.SetPanelsVisibility(posPanel, 500, Visibility.Collapsed);
+            manager_DamageInfoSequence.SetPanelsVisibility(0, posPanel, Visibility.Visible);
+            manager_DamageInfoSequence.SetPanelsVisibility(posPanel, 500, Visibility.Collapsed);
 
         }
 
@@ -481,12 +544,12 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
         //
 
-        private DamageTarget_PoolManager dpsModel;
+        private DamageTarget_PoolManager damagePoolManager;
         private DamageOCR_Target_v0 damageOCR;
         private MonitorScreenArea screenMonitoring;
         public int TryStartRTDPS()
         {
-            if (dpsModel==null)
+            if (damagePoolManager == null)
             {
                 DpsModels.TargetsDictionary.TargetsDictionary.LoadDictionary(UncorRTDPS_StaticSettings.ResourcesPath, UncorRTDPS_StaticSettings.OcrSettings.Lang);
 
@@ -504,16 +567,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 {
                     searchTargetNameMethod = DamageTarget_PoolManager.SearchTargetNameMethod.HammingDistance;
                 }
-                dpsModel = new DamageTarget_PoolManager(searchTargetNameMethod);
+                damagePoolManager = new DamageTarget_PoolManager(searchTargetNameMethod);
             }
-            dpsModel.ApplySettings(UncorRTDPS_StaticSettings.DpsModelSettings);
+            damagePoolManager.ApplySettings(UncorRTDPS_StaticSettings.DpsModelSettings);
 
             if (damageOCR == null)
             {
                 //damageOCR = new DamageOCR_LameBeta();
                 //damageOCR.registerDamageListener(dpsModel);
                 damageOCR = new DamageOCR_Target_v0();
-                damageOCR.RegisterTargetDamageListener(dpsModel);
+                damageOCR.RegisterTargetDamageListener(damagePoolManager);
             }
             damageOCR.InitEngine(UncorRTDPS_StaticSettings.OcrSettings.Lang);
             //damageOCR.applySettings(UncorRTDPS_StaticSettings.ocrSettings);
@@ -563,7 +626,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             this.damageViewMode = UncorRTDPS_StaticSettings.DpsWindowSettings.DpsViewMode;
 
             //dps visibility rows
-            optimizer_DamageInfoSequence.UpdatePanelsVisibilityParameters();
+            manager_DamageInfoSequence.UpdatePanelsVisibilityParameters();
 
             //ocr stats visibility rows
             StatS_Failures.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_Failures ? Visibility.Visible : Visibility.Collapsed;
@@ -581,9 +644,9 @@ namespace UncorRTDPS.UncorRTDPS_Windows
             StatA_AVG_TIME_Value.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_ART ? Visibility.Visible : Visibility.Collapsed;
 
             StatA_ALoad.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_ALoad ? Visibility.Visible : Visibility.Collapsed;
-            StatA_ALoad_Value.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_ALoad? Visibility.Visible: Visibility.Collapsed;
+            StatA_ALoad_Value.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_ALoad ? Visibility.Visible : Visibility.Collapsed;
             StatA_ALoad_PercentChar.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_ALoad ? Visibility.Visible : Visibility.Collapsed;
-            
+
             StatA_MLoad.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_MLoad ? Visibility.Visible : Visibility.Collapsed;
             StatA_MLoad_Value.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_MLoad ? Visibility.Visible : Visibility.Collapsed;
             StatA_MLoad_PercentChar.Visibility = UncorRTDPS_StaticSettings.DpsWindowSettings.ShowOcrStat_MLoad ? Visibility.Visible : Visibility.Collapsed;
@@ -620,6 +683,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
             StatA_MLoad.Text = null;
             StatA_MLoad.ToolTip = null;
+
+            GlobalEvents.SettingsWindowOpened -= SettingsWindowOpened_HandleEvent;
+            GlobalEvents.SettingsWindowClosed -= SettingsWindowClosed_HandleEvent;
+
+            GlobalEvents.HotkeysSettingsOpened -= HotkeysSettingsOpened_HandleEvent;
+            GlobalEvents.HotkeysSettingsClosed -= HotkeysSettingsClosed_HandleEvent;
+
+            UnregisterHotkeys_Monitoring();
+            UnregisterHotkeys_WindowsOpenClose();
+            UnregisterHotkeys_DamageInfoManager();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -673,10 +746,10 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            UnregisterHotkeys();
+            windowSizeService.UpdateWindowSize(name, new Size<double>(this.ActualWidth, this.ActualHeight));
             ForceSaveCurrentWindowPositionToConfigFile();
-            Services.ServicesContainer.CloseServicesContainer();
             Dispose();
+            ServicesContainer.CloseServicesContainer();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -689,7 +762,90 @@ namespace UncorRTDPS.UncorRTDPS_Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            RegisterHotkeys();
+
+        }
+
+        private Services.DamageHistory.DamageHistoryWindow _damageHistoryWindow = null;
+        private void OpenDamageHistoryWindow()
+        {
+            if (_damageHistoryWindow != null)
+                return;
+            Services.DamageHistory.DamageHistoryWindow damageHistoryWindow = new Services.DamageHistory.DamageHistoryWindow();
+            if (damageHistoryWindow.IsStartupPositionUnknown)
+            {
+                damageHistoryWindow.Top = this.Top;
+                damageHistoryWindow.Left = this.Left;
+            }
+            _damageHistoryWindow = damageHistoryWindow;
+            damageHistoryWindow.ShowDialog();
+            _damageHistoryWindow = null;
+        }
+
+        private void CloseDamageHistoryWindow()
+        {
+            if (_damageHistoryWindow == null)
+                return;
+            _damageHistoryWindow.Close();
+            _damageHistoryWindow = null;
+        }
+
+        private void ToggleDamageHistoryWindow()
+        {
+            if (_damageHistoryWindow == null)
+            {
+                OpenDamageHistoryWindow();
+            }
+            else
+            {
+                CloseDamageHistoryWindow();
+            }
+        }
+
+        private void ImageButton_History_Click(object sender, RoutedEventArgs e)
+        {
+            OpenDamageHistoryWindow();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            Application.Current.Shutdown();
+        }
+
+        private bool resumeRTDPSAfterSettingsIfWasRunning = false;
+        private void SettingsWindowOpened_HandleEvent(object sender, EventArgs e)
+        {
+            UnregisterHotkeys_Monitoring();
+
+            resumeRTDPSAfterSettingsIfWasRunning = false;
+            if (IsRTDPSRunning())
+            {
+                resumeRTDPSAfterSettingsIfWasRunning = true;
+                ToggleRTDPS();
+            }
+        }
+
+        private void SettingsWindowClosed_HandleEvent(object sender, EventArgs e)
+        {
+            RegisterHotkeys_Monitoring();
+
+            if (resumeRTDPSAfterSettingsIfWasRunning)
+                ToggleRTDPS();
+            resumeRTDPSAfterSettingsIfWasRunning = false;
+        }
+
+        private void HotkeysSettingsOpened_HandleEvent(object sender, EventArgs e)
+        {
+            UnregisterHotkeys_WindowsOpenClose();
+            manager_DamageInfoSequence.UnregisterHotkeysOnPanels();
+            UnregisterHotkeys_DamageInfoManager();
+        }
+
+        private void HotkeysSettingsClosed_HandleEvent(object sender, EventArgs e)
+        {
+            RegisterHotkeys_WindowsOpenClose();
+            manager_DamageInfoSequence.RefreshHotkeysOnPanels();
+            RegisterHotkeys_DamageInfoManager();
         }
     }
 }

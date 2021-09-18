@@ -10,7 +10,7 @@ namespace UncorRTDPS.DistanceAlgorithms
             int source1Length = source1.Length;
             int source2Length = source2.Length;
 
-            int [,] matrix = new int[source1Length + 1, source2Length + 1];
+            int[,] matrix = new int[source1Length + 1, source2Length + 1];
 
             // First calculation, if one entry is empty return full length
             if (source1Length == 0)

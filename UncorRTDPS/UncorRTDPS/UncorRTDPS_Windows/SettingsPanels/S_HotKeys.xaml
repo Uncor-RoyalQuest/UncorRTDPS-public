@@ -65,6 +65,23 @@
     <Grid Width="Auto" Height="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -77,20 +94,64 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Name="TextBlock_StartMonitoring" Text="Start monitoring:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBlock Name="TextBlock_StartMonitoring_HotKey" Text="" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
-        <Button Name="Button_StartMonitoring_KeyPickerDialog" Content="Change" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Click="Button_StartMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        <TextBlock Name="TextBlock_ResetStatistics" Text="Reset all statistics:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_ResetStatistics_HotKey" Text="" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_ResetStatistics_KeyPickerDialog" Content="Change" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Click="Button_ResetStatistics_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        
+        <TextBlock Name="TextBlock_StartMonitoring" Text="Start monitoring:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_StartMonitoring_HotKey" Text="" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_StartMonitoring_KeyPickerDialog" Content="Change" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Click="Button_StartMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
 
-        <TextBlock Name="TextBlock_StopMonitoring" Text="Stop monitoring:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBlock Name="TextBlock_StopMonitoring_HotKey" Text="" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
-        <Button Name="Button_StopMonitoring_KeyPickerDialog" Content="Change" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Click="Button_StopMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        <TextBlock Name="TextBlock_StopMonitoring" Text="Stop monitoring:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_StopMonitoring_HotKey" Text="" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_StopMonitoring_KeyPickerDialog" Content="Change" Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Click="Button_StopMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
 
-        <TextBlock Name="TextBlock_ToggleMonitoring" Text="Toggle monitoring:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBlock Name="TextBlock_ToggleMonitoring_HotKey" Text="" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center"/>
-        <Button Name="Button_ToggleMonitoring_KeyPickerDialog" Content="Change" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Click="Button_ToggleMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        <TextBlock Name="TextBlock_ToggleMonitoring" Text="Toggle monitoring:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_ToggleMonitoring_HotKey" Text="" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_ToggleMonitoring_KeyPickerDialog" Content="Change" Grid.Row="4" Grid.Column="4" VerticalAlignment="Center" Click="Button_ToggleMonitoring_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
 
-        <TextBlock Name="TextBlock_ResetStatistics" Text="Reset all statistics:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBlock Name="TextBlock_ResetStatistics_HotKey" Text="" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
-        <Button Name="Button_ResetStatistics_KeyPickerDialog" Content="Change" Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Click="Button_ResetStatistics_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        
+
+        <!--Windows open/close-->
+        
+        <!--Settings window-->
+        <TextBlock Name="TextBlock_OpenSettings" Text="Open settings:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_OpenSettings_HotKey" Text="" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_OpenSettings_KeyPickerDialog" Content="Change" Grid.Row="6" Grid.Column="4" VerticalAlignment="Center" Click="Button_OpenSettings_KeyPickerDialog_Click"  Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <TextBlock Name="TextBlock_CloseSettings" Text="Close settings:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_CloseSettings_HotKey" Text="" Grid.Row="7" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_CloseSettings_KeyPickerDialog" Content="Change" Grid.Row="7" Grid.Column="4" VerticalAlignment="Center" Click="Button_CloseSettings_KeyPickerDialog_Click"  Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <TextBlock Name="TextBlock_ToggleSettings" Text="Toggle settings:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_ToggleSettings_HotKey" Text="" Grid.Row="8" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_ToggleSettings_KeyPickerDialog" Content="Change" Grid.Row="8" Grid.Column="4" VerticalAlignment="Center" Click="Button_ToggleSettings_KeyPickerDialog_Click"  Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <!--recent damage window-->
+        <TextBlock Name="TextBlock_OpenDamageHistory" Text="Open damage history:" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_OpenDamageHistory_HotKey" Text="" Grid.Row="10" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_OpenDamageHistory_KeyPickerDialog" Content="Change" Grid.Row="10" Grid.Column="4" VerticalAlignment="Center" Click="Button_OpenDamageHistory_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <TextBlock Name="TextBlock_CloseDamageHistory" Text="Close damage history:" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_CloseDamageHistory_HotKey" Text="" Grid.Row="11" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_CloseDamageHistory_KeyPickerDialog" Content="Change" Grid.Row="11" Grid.Column="4" VerticalAlignment="Center" Click="Button_CloseDamageHistory_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <TextBlock Name="TextBlock_ToggleDamageHistory" Text="Toggle damage history:" Grid.Row="12" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_ToggleDamageHistory_HotKey" Text="" Grid.Row="12" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_ToggleDamageHistory_KeyPickerDialog" Content="Change" Grid.Row="12" Grid.Column="4" VerticalAlignment="Center" Click="Button_ToggleDamageHistory_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+        
+        <!--show detailed last boss/elite-->
+        <TextBlock Name="TextBlock_OpenLastDetailed" Text="Open last detailed:" Grid.Row="14" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_OpenLastDetailed_HotKey" Text="" Grid.Row="14" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_OpenLastDetailed_KeyPickerDialog" Content="Change" Grid.Row="14" Grid.Column="4" VerticalAlignment="Center" Click="Button_OpenLastDetailed_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <!--global close window-->
+        <TextBlock Name="TextBlock_CloseAllExceptMain" Text="Close all except main:" Grid.Row="18" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_CloseAllExceptMain_HotKey" Text="" Grid.Row="18" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_CloseAllExceptMain_KeyPickerDialog" Content="Change" Grid.Row="18" Grid.Column="4" VerticalAlignment="Center" Click="Button_CloseAllExceptMain_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
+
+        <TextBlock Name="TextBlock_CloseAllCharts" Text="Close charts:" Grid.Row="19" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBlock Name="TextBlock_CloseAllCharts_HotKey" Text="" Grid.Row="19" Grid.Column="2" VerticalAlignment="Center"/>
+        <Button Name="Button_CloseAllCharts_KeyPickerDialog" Content="Change" Grid.Row="19" Grid.Column="4" VerticalAlignment="Center" Click="Button_CloseAllCharts_KeyPickerDialog_Click" Style="{StaticResource ButtonSearchStyle}" Foreground="#FFABABA7"/>
     </Grid>
 </UserControl>

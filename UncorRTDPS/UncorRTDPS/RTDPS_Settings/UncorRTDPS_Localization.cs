@@ -83,7 +83,8 @@ namespace UncorRTDPS.RTDPS_Settings
             if (dictGUI.TryGetValue(key, out val))
             {
                 return dictGUI[key];
-            } else
+            }
+            else
             {
                 return key;
             }

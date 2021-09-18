@@ -106,7 +106,7 @@ namespace UncorRTDPS.Services.KeyPickerDialog
         private void UpdateCell_I(int vk, int cell)
         {
             ModifierKeys modifier = KeyTranslator.VkToModifier(vk);
-            
+
             if (modifier != ModifierKeys.None)
             {
                 isKey[cell] = false;
@@ -155,7 +155,7 @@ namespace UncorRTDPS.Services.KeyPickerDialog
             //List<ModifierKeys> resModifierKeys = new List<ModifierKeys>();
 
             HashSet<ModifierKeys> resModifierKeys = new HashSet<ModifierKeys>();
-            for (int i=0; i<4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (!isKey[i] && modifierKeys[i] != ModifierKeys.None)
                     resModifierKeys.Add(modifierKeys[i]);
@@ -175,7 +175,7 @@ namespace UncorRTDPS.Services.KeyPickerDialog
             }
             return resKeys.ToList();
         }
-        
+
 
         private void TextBox_Key_I_TextChanged(object sender, TextChangedEventArgs e, int i)
         {

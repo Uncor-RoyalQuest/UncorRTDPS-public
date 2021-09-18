@@ -10,8 +10,16 @@ namespace UncorRTDPS.Services.HotKeys
         private Dictionary<string, HotKeyCombination> hotKeyCombinations = new Dictionary<string, HotKeyCombination>();
         private string fileName_jsonDictionaryHotKeyCombinations;
 
-        public ServiceResponseStatus InitService(string fileName_jsonDictionaryHotKeyCombinations)
+        /// <summary>
+        /// args[0] = fileName_jsonDictionaryHotKeyCombinations
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ServiceResponseStatus InitService(string[] args)
         {
+            if (args == null || args.Length < 1)
+                return ServiceResponseStatus.FAILED;
+            string fileName_jsonDictionaryHotKeyCombinations = args[0];
             this.fileName_jsonDictionaryHotKeyCombinations = fileName_jsonDictionaryHotKeyCombinations;
             try
             {
@@ -93,11 +101,6 @@ namespace UncorRTDPS.Services.HotKeys
             */
             hotKeyCombinations[combinationName] = hotKeyCombination;
             return true;
-        }
-
-        public static HotKeysStorageService createHotKeysStorageService()
-        {
-            return new HotKeysStorageService();
         }
     }
 }

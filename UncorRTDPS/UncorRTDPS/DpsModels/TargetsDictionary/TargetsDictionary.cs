@@ -63,7 +63,7 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             Target targetMinDistance = null;
             int minHammingDistance = Int32.MaxValue;
             int targetsOfTheSameLengthCount = targetsOfTheSameLength.Count;
-            for (int i=0; i<targetsOfTheSameLengthCount; i++)
+            for (int i = 0; i < targetsOfTheSameLengthCount; i++)
             {
                 int dist_i = DistanceAlgorithms.HammingDistance.CalcHammingDistance(targetsOfTheSameLength[i].searchFriendlyOriginalName, searchFriendlyOriginalName);
                 if (minHammingDistance > dist_i)
@@ -93,7 +93,7 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             Target[] targetsMin = { null, null, null };
             int[] distMin = { Int32.MaxValue, Int32.MaxValue, Int32.MaxValue };
             int posTargets = 0;
-            for (int i = tSearchLen-1; i < tSearchLen + 1; i++)
+            for (int i = tSearchLen - 1; i < tSearchLen + 1; i++)
             {
                 List<Target> targets;
 
@@ -124,7 +124,7 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             //find min distance from minDist arr
             int posMinLevDist = 0;
             int minLevDist = distMin[0];
-            for (int i=1; i < 3; i++)
+            for (int i = 1; i < 3; i++)
             {
                 if (distMin[i] < minLevDist)
                 {
@@ -166,7 +166,7 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
 
 
             //load bosses
-            StreamReader fileBosses = new StreamReader(Path.GetFullPath(Path.Combine(executingDir, "src", "mobs_rtdps", "bosses_"+langFolder+".txt")));
+            StreamReader fileBosses = new StreamReader(Path.GetFullPath(Path.Combine(executingDir, "src", "mobs_rtdps", "bosses_" + langFolder + ".txt")));
             string rowBoss;
             int id = 0;
             while ((rowBoss = fileBosses.ReadLine()) != null)
@@ -228,10 +228,10 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             }
         }
 
-        public static (long,string) TryGetHpAndNameFromStringTarget(string s)
+        public static (long, string) TryGetHpAndNameFromStringTarget(string s)
         {
             int posWhiteSpace = -1;
-            for (int i=0; i<s.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == ' ')
                 {
@@ -254,7 +254,7 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             }
             else
             {
-                return (-1,s);
+                return (-1, s);
             }
         }
     }

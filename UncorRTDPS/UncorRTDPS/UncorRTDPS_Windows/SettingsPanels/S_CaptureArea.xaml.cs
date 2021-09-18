@@ -18,6 +18,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
     /// </summary>
     public partial class S_CaptureArea : UserControl, IParentTopmostChanger, IDisposable, IMenuPanel
     {
+        private string menu_name = "cap_area";
+
         public S_CaptureArea()
         {
             InitializeComponent();
@@ -52,7 +54,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             Button_ApplyNewArea.Content = RTDPS_Settings.UncorRTDPS_Localization.GetLocaleGuiVal("guiApplyNewArea");
             TextBlock_Comment_ApplyNewArea.Text = "";
         }
-        
+
         public void InitDefaultImgs()
         {
             Image_TopLeftPoint.Source = RTDPS_Settings.UncorRTDPS_StaticSettings.BiSquare_Question;
@@ -485,6 +487,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             }
             UpdateSelectedArea();
             UpdateTopLeftBotRightImgs();
+        }
+
+        public string GetMenuName()
+        {
+            return this.menu_name;
         }
     }
 }

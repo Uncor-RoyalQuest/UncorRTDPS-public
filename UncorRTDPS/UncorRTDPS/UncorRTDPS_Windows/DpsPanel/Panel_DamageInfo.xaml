@@ -13,13 +13,17 @@
                 <Separator/>
                 <MenuItem Name="ContextMenu_Item_CopyDmg" Header="Copy to clipboard: dmg" Click="ContextMenu_Item_CopyDmg_Click"/>
                 <MenuItem Name="ContextMenu_Item_CopyHits" Header="Copy to clipboard: hits" Click="ContextMenu_Item_CopyHits_Click"/>
+                <MenuItem Name="ContextMenu_Item_CopyMaxHitDmg" Header="Copy to clipboard: max" Click="ContextMenu_Item_CopyMaxHitDmg_Click"/>
                 <MenuItem Name="ContextMenu_Item_CopyT" Header="Copy to clipboard: t" Click="ContextMenu_Item_CopyT_Click"/>
                 <MenuItem Name="ContextMenu_Item_CopyDps" Header="Copy to clipboard: dps" Click="ContextMenu_Item_CopyDps_Click"/>
                 <Separator/>
                 <MenuItem Name="ContextMenu_Item_CopyAll" Header="Copy to clipboard: All" Click="ContextMenu_Item_CopyAll_Click"/>
+                <Separator/>
+                <MenuItem Name="ContextMenu_Item_OpenChart" Header="Open chart view" Click="ContextMenu_Item_OpenChart_Click"/>
             </ContextMenu>
         </Grid.ContextMenu>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -49,10 +53,13 @@
         <TextBlock Text="hits:" Name="TextBlock_Hits" Foreground="#FFABABA7" Grid.Row="2" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_Hits_Value_MouseLeftButtonDown"/>
         <TextBlock Text="0" Name="TextBlock_Hits_Value" Foreground="#FFABABA7" Grid.Row="2" Grid.Column="1" MouseLeftButtonDown="TextBlock_Hits_Value_MouseLeftButtonDown"/>
 
-        <TextBlock Text="t:" Name="TextBlock_T" Foreground="#FFABABA7" Grid.Row="3" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
-        <TextBlock Text="0" Name="TextBlock_T_Value" Foreground="#FFABABA7" Grid.Row="3" Grid.Column="1" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="max:" Name="TextBlock_MaxHitDmg" Foreground="#FFABABA7" Grid.Row="3" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_MaxHitDmg_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="0" Name="TextBlock_MaxHitDmg_Value" Foreground="#FFABABA7" Grid.Row="3" Grid.Column="1" MouseLeftButtonDown="TextBlock_MaxHitDmg_Value_MouseLeftButtonDown"/>
 
-        <TextBlock Text="dps:" Name="TextBlock_DPS" Foreground="#FFABABA7" Grid.Row="4" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown" Padding="0,5,5,0"/>
-        <TextBlock Text="0" Name="TextBlock_DPS_Value" Foreground="#FFABABA7" Grid.Row="4" Grid.Column="1" Padding="0,5,0,0" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="t:" Name="TextBlock_T" Foreground="#FFABABA7" Grid.Row="4" Padding="0,0,5,0" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
+        <TextBlock Text="0" Name="TextBlock_T_Value" Foreground="#FFABABA7" Grid.Row="4" Grid.Column="1" MouseLeftButtonDown="TextBlock_T_Value_MouseLeftButtonDown"/>
+
+        <TextBlock Text="dps:" Name="TextBlock_DPS" Foreground="#FFABABA7" Grid.Row="5" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown" Padding="0,5,5,0"/>
+        <TextBlock Text="0" Name="TextBlock_DPS_Value" Foreground="#FFABABA7" Grid.Row="5" Grid.Column="1" Padding="0,5,0,0" MouseLeftButtonDown="TextBlock_DPS_Value_MouseLeftButtonDown"/>
     </Grid>
 </UserControl>

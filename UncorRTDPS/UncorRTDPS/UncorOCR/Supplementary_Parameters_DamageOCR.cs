@@ -3,7 +3,7 @@
     public class Supplementary_Parameters_DamageOCR
     {
         public int AverageCharacterWidth { get; private set; } = -1;
-        public int GarbageWidthAfterDamage { get; private set; } = -1; 
+        public int GarbageWidthAfterDamage { get; private set; } = -1;
 
         public int DamageWordWidth { get; private set; } = -1; //sub of garbageWidthAfterDamage
         public int TargetWordWidth { get; private set; } = -1; //sub of garbageWidthAfterDamage
@@ -18,11 +18,11 @@
         public int BitmapWidth { get; private set; } = -1;
 
         public Supplementary_Parameters_DamageOCR(
-            int averageCharacterWidth, 
-            int garbageWidthAfterDamage, 
-            int maximumRowHeight, 
-            int averageWhiteSpaceBetweenRows, 
-            int damageWordWidth, 
+            int averageCharacterWidth,
+            int garbageWidthAfterDamage,
+            int maximumRowHeight,
+            int averageWhiteSpaceBetweenRows,
+            int damageWordWidth,
             int targetWordWidth,
             int verticallyDataStart,
             int bitmapHeight,

@@ -72,10 +72,10 @@ namespace UncorRTDPS.UncorOCR
                 return -1;
             int minLen = charsLength.Min();
             int maxLen = charsLength.Max();
-            int avg = (int) charsLength.Average();
+            int avg = (int)charsLength.Average();
             if (minLen < avg / 2)
             {
-                for (int i=0; i<charsLength.Count; i++)
+                for (int i = 0; i < charsLength.Count; i++)
                 {
                     if (charsLength[i] < avg / 2)
                     {
@@ -100,7 +100,7 @@ namespace UncorRTDPS.UncorOCR
 
             if (charsLength.Count < 1)
                 return -1;
-            return (int)(charsLength.Average()+1);
+            return (int)(charsLength.Average() + 1);
             //return summCharsLen / chars;
         }
 
@@ -130,7 +130,7 @@ namespace UncorRTDPS.UncorOCR
             int horizEndWordDamage = Util_FastBitmap.FindEndOfThisWord(bmpFast, posStartSearch, row.posStart, row.posEnd, averageCharLen);
             if (horizEndWordDamage == -1)
                 return -1;
-            
+
             //find start of the "damage."
             int horizStartWordDamage = Util_FastBitmap.FindStartOfThisWord(bmpFast, posStartSearch, row.posStart, row.posEnd, averageCharLen);
 
@@ -184,7 +184,7 @@ namespace UncorRTDPS.UncorOCR
                 bmpResizedFast.Unlock();
                 return null;
             }
-            
+
             int avgCharLen = FindAverageLengthOfCharacter(bmpResizedFast, rowFirst.posStart, rowFirst.posEnd);
             if (avgCharLen == -1)
             {
@@ -236,7 +236,7 @@ namespace UncorRTDPS.UncorOCR
             int maxHeight = -1;
             int currentlyRowsCount = transformations_DamageOCR_Target.currentlyRowsCount;
             List<ChatRowInfo> chatRowsInfo = transformations_DamageOCR_Target.chatRowsInfo;
-            for (int i=0; i<currentlyRowsCount; i++)
+            for (int i = 0; i < currentlyRowsCount; i++)
             {
                 ChatRowInfo rowI = chatRowsInfo[i];
                 if (rowI.ignoreThisRow)
@@ -251,10 +251,10 @@ namespace UncorRTDPS.UncorOCR
             //find average whitespace between rows
             int sumWS = 0;
             int countWS = 0;
-            for (int i = 0; i < currentlyRowsCount - 1; i+=1)
+            for (int i = 0; i < currentlyRowsCount - 1; i += 1)
             {
                 ChatRowInfo rowThis = chatRowsInfo[i];
-                ChatRowInfo rowNext = chatRowsInfo[i+1];
+                ChatRowInfo rowNext = chatRowsInfo[i + 1];
                 if (rowThis.ignoreThisRow || rowNext.ignoreThisRow)
                     continue;
 

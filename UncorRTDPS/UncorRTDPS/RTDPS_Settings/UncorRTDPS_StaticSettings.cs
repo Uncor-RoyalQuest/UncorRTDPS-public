@@ -35,6 +35,7 @@ namespace UncorRTDPS.RTDPS_Settings
         public static BitmapImage BiGears { get; set; }
         public static BitmapImage BiLockGray { get; set; }
         public static BitmapImage BiLockLockedGray { get; set; }
+        public static BitmapImage BiDamageHistory { get; set; }
         public static BitmapImage BiWClose { get; set; }
         //
 
@@ -65,7 +66,7 @@ namespace UncorRTDPS.RTDPS_Settings
         {
             var dpiXProperty = typeof(System.Windows.SystemParameters).GetProperty("DpiX", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
             var dpiYProperty = typeof(System.Windows.SystemParameters).GetProperty("Dpi", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-            
+
             var dpiX = (int)dpiXProperty.GetValue(null, null);
             var dpiY = (int)dpiYProperty.GetValue(null, null);
 
@@ -127,6 +128,14 @@ namespace UncorRTDPS.RTDPS_Settings
                        )
                    )
                );
+
+            BiDamageHistory = new BitmapImage(
+                new Uri(
+                   Path.GetFullPath(
+                       Path.Combine(ResourcesPath, @"src\icons_rtdps\history_16x16_gray.png")
+                       )
+                   )
+                );
 
             BiWClose = new BitmapImage(
                new Uri(
@@ -299,16 +308,16 @@ namespace UncorRTDPS.RTDPS_Settings
             int bitmapWidth = SInt.FromString(UncorRTDPS_Config.getConfigVal("ocr_suppl_bmpWidth")) ?? -1;
 
             Supplementary_Parameters_DamageOCR = new UncorOCR.Supplementary_Parameters_DamageOCR(
-                averageCharacterWidth, garbageWidthAfterDamage, 
-                maximumRowHeight, averageWhiteSpaceBetweenRows, 
-                damageWordWidth, targetWordWidth, 
-                verticallyDataStart, 
+                averageCharacterWidth, garbageWidthAfterDamage,
+                maximumRowHeight, averageWhiteSpaceBetweenRows,
+                damageWordWidth, targetWordWidth,
+                verticallyDataStart,
                 bitmapHeight, bitmapWidth);
 
             //damage model
             long
                 longDelayBoss = SLong.FromString(UncorRTDPS_Config.getConfigVal("dpsModel_bossSeparationDelay")) ?? 30000,
-                longDelayElite = SLong.FromString(UncorRTDPS_Config.getConfigVal("dpsModel_eliteSeparationDelay")) ?? 15000, 
+                longDelayElite = SLong.FromString(UncorRTDPS_Config.getConfigVal("dpsModel_eliteSeparationDelay")) ?? 15000,
                 longDelayCommon = SLong.FromString(UncorRTDPS_Config.getConfigVal("dpsModel_commonSeparationDelay")) ?? 3000;
 
             DpsModelSettings = new DpsModels.ModelSettings(longDelayBoss, longDelayElite, longDelayCommon);
@@ -316,9 +325,9 @@ namespace UncorRTDPS.RTDPS_Settings
             //hovering stats window
             DpsWindowSettings = new UncorRTDPS_Windows.DPSWindowSettings();
             int? nIntVal = SInt.FromString(UncorRTDPS_Config.getConfigVal("dpsWindow_fontSize"));
-            if (nIntVal == null) 
-                DpsWindowSettings.FontSize = 11; 
-            else 
+            if (nIntVal == null)
+                DpsWindowSettings.FontSize = 11;
+            else
                 DpsWindowSettings.FontSize = nIntVal.Value;
 
             f = SFloat.FromString(UncorRTDPS_Config.getConfigVal("dpsWindow_Opacity"));
@@ -388,6 +397,15 @@ namespace UncorRTDPS.RTDPS_Settings
                 DpsWindowSettings.ShowHits_mode_0 = true;
             }
 
+            if (bool.TryParse(UncorRTDPS_Config.getConfigVal("dpsWindow_ShowMaxHitDmg_Mode_0"), out boolVal))
+            {
+                DpsWindowSettings.ShowMaxHitDmg_mode_0 = boolVal;
+            }
+            else
+            {
+                DpsWindowSettings.ShowMaxHitDmg_mode_0 = false;
+            }
+
             if (bool.TryParse(UncorRTDPS_Config.getConfigVal("dpsWindow_ShowT_Mode_0"), out boolVal))
             {
                 DpsWindowSettings.ShowT_mode_0 = boolVal;
@@ -422,6 +440,15 @@ namespace UncorRTDPS.RTDPS_Settings
             else
             {
                 DpsWindowSettings.ShowHits_mode_1 = true;
+            }
+
+            if (bool.TryParse(UncorRTDPS_Config.getConfigVal("dpsWindow_ShowMaxHitDmg_Mode_1"), out boolVal))
+            {
+                DpsWindowSettings.ShowMaxHitDmg_mode_1 = boolVal;
+            }
+            else
+            {
+                DpsWindowSettings.ShowMaxHitDmg_mode_1 = false;
             }
 
             if (bool.TryParse(UncorRTDPS_Config.getConfigVal("dpsWindow_ShowT_Mode_1"), out boolVal))
@@ -617,11 +644,13 @@ namespace UncorRTDPS.RTDPS_Settings
 
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowDamage_Mode_0", DpsWindowSettings.ShowDamage_mode_0.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowHits_Mode_0", DpsWindowSettings.ShowHits_mode_0.ToString());
+            UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowMaxHitDmg_Mode_0", DpsWindowSettings.ShowMaxHitDmg_mode_0.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowT_Mode_0", DpsWindowSettings.ShowT_mode_0.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowDps_Mode_0", DpsWindowSettings.ShowDps_mode_0.ToString());
 
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowDamage_Mode_1", DpsWindowSettings.ShowDamage_mode_1.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowHits_Mode_1", DpsWindowSettings.ShowHits_mode_1.ToString());
+            UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowMaxHitDmg_Mode_1", DpsWindowSettings.ShowMaxHitDmg_mode_1.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowT_Mode_1", DpsWindowSettings.ShowT_mode_1.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_ShowDps_Mode_1", DpsWindowSettings.ShowDps_mode_1.ToString());
             UncorRTDPS_Config.UpdateConfigVal("dpsWindow_BossesLimit_Mode_1", SInt.ToString(DpsWindowSettings.BossesLimit_mode_1));

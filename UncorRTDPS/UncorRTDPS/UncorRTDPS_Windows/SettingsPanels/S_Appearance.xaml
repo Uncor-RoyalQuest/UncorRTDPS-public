@@ -158,104 +158,132 @@
         <TextBlock Name="TextBlock_EnableAliases" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="Enable aliases:" Foreground="#FFABABA7"/>
         <CheckBox Name="CheckBox_EnableAliases" Grid.Row="7" Grid.Column="2" Margin="5,0,0,0" HorizontalAlignment="Left"/>
 
-        <Grid Grid.Row="9" Grid.ColumnSpan="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="15"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                
-                <!--10-->
-                <RowDefinition Height="Auto"/>
-                
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="15"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="9" Grid.ColumnSpan="4">
 
             <!--dps stat mode 0 - HighestPriority-->
-            <TextBlock Name="TextBlock_ShowInTheMode_Mode_0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Show in the mode: Highest priority" Foreground="#FFABABA7"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Name="TextBlock_ShowDmg_Mode_0" Grid.Row="1" Grid.Column="1" Text="- dmg:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowDmg_Mode_0" Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowInTheMode_Mode_0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Show in the mode: Highest priority" Foreground="#FFABABA7"/>
 
-            <TextBlock Name="TextBlock_ShowHits_Mode_0" Grid.Row="2" Grid.Column="1" Text="- hits:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowHits_Mode_0" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowDmg_Mode_0" Grid.Row="1" Grid.Column="1" Text="- dmg:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowDmg_Mode_0" Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowT_Mode_0" Grid.Row="3" Grid.Column="1" Text="- t:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowT_Mode_0" Grid.Row="3" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowHits_Mode_0" Grid.Row="2" Grid.Column="1" Text="- hits:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowHits_Mode_0" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
+                
+                <TextBlock Name="TextBlock_ShowMaxHitDmg_Mode_0" Grid.Row="3" Grid.Column="1" Text="- max:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowMaxHitDmg_Mode_0" Grid.Row="3" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowDps_Mode_0" Grid.Row="4" Grid.Column="1" Text="- dps:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowDps_Mode_0" Grid.Row="4" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowT_Mode_0" Grid.Row="4" Grid.Column="1" Text="- t:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowT_Mode_0" Grid.Row="4" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <!--dps stat mode 1 - All-->
-            <TextBlock Name="TextBlock_ShowInTheMode_Mode_1" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Text="Show in the mode: All" Foreground="#FFABABA7"/>
+                <TextBlock Name="TextBlock_ShowDps_Mode_0" Grid.Row="5" Grid.Column="1" Text="- dps:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowDps_Mode_0" Grid.Row="5" Grid.Column="2" Margin="5,0,0,0"/>
+            </Grid>
 
-            <TextBlock Name="TextBlock_ShowDmg_Mode_1" Grid.Row="7" Grid.Column="1" Text="- dmg:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowDmg_Mode_1" Grid.Row="7" Grid.Column="2" Margin="5,0,0,0"/>
+            <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Name="TextBlock_ShowHits_Mode_1" Grid.Row="8" Grid.Column="1" Text="- hits:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowHits_Mode_1" Grid.Row="8" Grid.Column="2" Margin="5,0,0,0"/>
+                <!--dps stat mode 1 - All-->
+                <TextBlock Name="TextBlock_ShowInTheMode_Mode_1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Show in the mode: All" Foreground="#FFABABA7"/>
 
-            <TextBlock Name="TextBlock_ShowT_Mode_1" Grid.Row="9" Grid.Column="1" Text="- t:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowT_Mode_1" Grid.Row="9" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowDmg_Mode_1" Grid.Row="1" Grid.Column="1" Text="- dmg:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowDmg_Mode_1" Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowDps_Mode_1" Grid.Row="10" Grid.Column="1" Text="- dps:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowDps_Mode_1" Grid.Row="10" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowHits_Mode_1" Grid.Row="2" Grid.Column="1" Text="- hits:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowHits_Mode_1" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_BossesLimit_Mode_1" Grid.Row="11" Grid.Column="1" Text="Max bosses:" Foreground="#FFABABA7" VerticalAlignment="Center"/>
-            <Slider Name="Slider_BossesLimit_Mode_1" Grid.Row="11" Grid.Column="2" Width="50" Minimum="0" Maximum="10" SmallChange="1" LargeChange="1" Value="2" Margin="5,0,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Name="TextBlock_ShowMaxHitDmg_Mode_1" Grid.Row="3" Grid.Column="1" Text="- max:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowMaxHitDmg_Mode_1" Grid.Row="3" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ElitesLimit_Mode_1" Grid.Row="12" Grid.Column="1" Text="Max elites:" Foreground="#FFABABA7" VerticalAlignment="Center"/>
-            <Slider Name="Slider_ElitesLimit_Mode_1" Grid.Row="12" Grid.Column="2" Width="50" Minimum="0" Maximum="10" SmallChange="1" LargeChange="1" Value="2" Margin="5,0,0,0" HorizontalAlignment="Left"/>
+                <TextBlock Name="TextBlock_ShowT_Mode_1" Grid.Row="4" Grid.Column="1" Text="- t:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowT_Mode_1" Grid.Row="4" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowCommon_Mode_1" Grid.Row="13" Grid.Column="1" Text="Show common:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowCommon_Mode_1" Grid.Row="13" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowDps_Mode_1" Grid.Row="5" Grid.Column="1" Text="- dps:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowDps_Mode_1" Grid.Row="5" Grid.Column="2" Margin="5,0,0,0"/>
 
+                <TextBlock Name="TextBlock_BossesLimit_Mode_1" Grid.Row="6" Grid.Column="1" Text="Max bosses:" Foreground="#FFABABA7" VerticalAlignment="Center"/>
+                <Slider Name="Slider_BossesLimit_Mode_1" Grid.Row="6" Grid.Column="2" Width="50" Minimum="0" Maximum="10" SmallChange="1" LargeChange="1" Value="2" Margin="5,0,0,0" HorizontalAlignment="Left"/>
 
+                <TextBlock Name="TextBlock_ElitesLimit_Mode_1" Grid.Row="7" Grid.Column="1" Text="Max elites:" Foreground="#FFABABA7" VerticalAlignment="Center"/>
+                <Slider Name="Slider_ElitesLimit_Mode_1" Grid.Row="7" Grid.Column="2" Width="50" Minimum="0" Maximum="10" SmallChange="1" LargeChange="1" Value="2" Margin="5,0,0,0" HorizontalAlignment="Left"/>
 
+                <TextBlock Name="TextBlock_ShowCommon_Mode_1" Grid.Row="8" Grid.Column="1" Text="Show common:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowCommon_Mode_1" Grid.Row="8" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <!--ocr stat-->
-            <TextBlock Name="TextBlock_ShowOcrStat" Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Text="Show recognition statistics:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat" Grid.Row="15" Grid.Column="2" Margin="5,0,0,0"/>
+            </Grid>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_Failures" Grid.Row="16" Grid.Column="1" Text="- Failures:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_Failures" Grid.Row="16" Grid.Column="2" Margin="5,0,0,0"/>
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_Losses" Grid.Row="17" Grid.Column="1" Text="- Losses:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_Losses" Grid.Row="17" Grid.Column="2" Margin="5,0,0,0"/>
+                <!--ocr stat-->
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="3">
+                    <TextBlock Name="TextBlock_ShowOcrStat" Text="Show recognition statistics:" Foreground="#FFABABA7"/>
+                    <CheckBox Name="CheckBox_ShowOcrStat" Margin="5,0,0,0"/>
+                </StackPanel>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_RPS" Grid.Row="18" Grid.Column="1" Text="- RPS:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_RPS" Grid.Row="18" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowOcrStat_Failures" Grid.Row="1" Grid.Column="1" Text="- Failures:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_Failures" Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_ART" Grid.Row="19" Grid.Column="1" Text="- ART:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_ART" Grid.Row="19" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowOcrStat_Losses" Grid.Row="2" Grid.Column="1" Text="- Losses:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_Losses" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_ALoad" Grid.Row="20" Grid.Column="1" Text="- ALoad:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_ALoad" Grid.Row="20" Grid.Column="2" Margin="5,0,0,0"/>
+                <TextBlock Name="TextBlock_ShowOcrStat_RPS" Grid.Row="3" Grid.Column="1" Text="- RPS:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_RPS" Grid.Row="3" Grid.Column="2" Margin="5,0,0,0"/>
 
-            <TextBlock Name="TextBlock_ShowOcrStat_MLoad" Grid.Row="21" Grid.Column="1" Text="- MLoad:" Foreground="#FFABABA7"/>
-            <CheckBox Name="CheckBox_ShowOcrStat_MLoad" Grid.Row="21" Grid.Column="2" Margin="5,0,0,0"/>
-        </Grid>
+                <TextBlock Name="TextBlock_ShowOcrStat_ART" Grid.Row="4" Grid.Column="1" Text="- ART:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_ART" Grid.Row="4" Grid.Column="2" Margin="5,0,0,0"/>
+
+                <TextBlock Name="TextBlock_ShowOcrStat_ALoad" Grid.Row="5" Grid.Column="1" Text="- ALoad:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_ALoad" Grid.Row="5" Grid.Column="2" Margin="5,0,0,0"/>
+
+                <TextBlock Name="TextBlock_ShowOcrStat_MLoad" Grid.Row="6" Grid.Column="1" Text="- MLoad:" Foreground="#FFABABA7"/>
+                <CheckBox Name="CheckBox_ShowOcrStat_MLoad" Grid.Row="6" Grid.Column="2" Margin="5,0,0,0"/>
+
+            </Grid>
+        </StackPanel>
+        
         
 
         <!-- apply new settings-->

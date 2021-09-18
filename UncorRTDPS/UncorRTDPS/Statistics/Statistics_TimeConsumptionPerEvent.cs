@@ -20,7 +20,7 @@ namespace UncorRTDPS.Statistics
             this.option_RefreshDelay = option_RefreshDelay;
         }
 
-        public void AddEvent(int eventCount,long duration, long eventTime)
+        public void AddEvent(int eventCount, long duration, long eventTime)
         {
             if (eventTimeLast - eventTimeStart > option_RefreshDelay)
             {

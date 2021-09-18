@@ -9,7 +9,7 @@ namespace UncorRTDPS.Screencap
         public int Y_topLeft { get; set; }
 
         public bool IsBotRightSet { get; private set; } = false;
-        public int X_botRight {get; set; }
+        public int X_botRight { get; set; }
         public int Y_botRight { get; set; }
 
         public int Width { get; set; }
@@ -48,12 +48,12 @@ namespace UncorRTDPS.Screencap
 
         public SelectedArea(string X_tl, string Y_tl, string X_br, string Y_br)
         {
-            int? 
-                iX_tl = SInt.FromString(X_tl), 
-                iY_tl = SInt.FromString(Y_tl), 
-                iX_br = SInt.FromString(X_br), 
+            int?
+                iX_tl = SInt.FromString(X_tl),
+                iY_tl = SInt.FromString(Y_tl),
+                iX_br = SInt.FromString(X_br),
                 iY_br = SInt.FromString(Y_br);
-            
+
             if (iX_tl == null || iY_tl == null || iX_br == null || iY_br == null)
             {
                 return;
@@ -127,7 +127,7 @@ namespace UncorRTDPS.Screencap
             if (corner == Corners.TopLeft || corner == Corners.BotLeft)
             {
                 SetTopLeft(X_topLeft - val, Y_topLeft);
-            } 
+            }
             else if (corner == Corners.TopRight || corner == Corners.BotRight)
             {
                 SetBotRight(X_botRight - val, Y_botRight);

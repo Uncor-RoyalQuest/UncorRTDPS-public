@@ -27,7 +27,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
             int countValid = 0;
 
             int findN = findIndex + 1;
-            for (int i=0; i < currentlyRowsCount; i++)
+            for (int i = 0; i < currentlyRowsCount; i++)
             {
                 if (chatRowsInfo[i].ignoreThisRow)
                     continue;
@@ -158,7 +158,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
         public void FindAllTargetsPositions(FastBitmap.FastBitmap bmpFast, int fillerLength, int avgCharLength)
         {
             ChatRowInfo row;
-            for (int r=0; r<currentlyRowsCount; r++)
+            for (int r = 0; r < currentlyRowsCount; r++)
             {
                 row = chatRowsInfo[r];
                 if (row.ignoreThisRow)
@@ -204,7 +204,7 @@ namespace UncorRTDPS.UncorOCR.Transformations
             }
         }
 
-        
+
 
         public void DefineDamageStartForRow(ChatRowInfo row, FastBitmap.FastBitmap bmpFast, int horizPosStart)
         {

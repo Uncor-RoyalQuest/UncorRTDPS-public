@@ -19,7 +19,7 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
             heightsInCatalog = new List<int>();
 
             int currHeight = minHeight;
-            for (int i=0; i<heightStepCount; i++)
+            for (int i = 0; i < heightStepCount; i++)
             {
                 currHeight = minHeight + (heightStep * i);
 
@@ -27,7 +27,7 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
                 heightsInCatalog.Add(currHeight);
             }
 
-            for (int i = 0; i<catalogByHeight.Count; i++)
+            for (int i = 0; i < catalogByHeight.Count; i++)
             {
                 catalogByHeight[i].CreateBmps(minWidth, heightsInCatalog[i], widthStep, widthStepCount);
             }
@@ -69,7 +69,7 @@ namespace UncorRTDPS.UncorOCR.BufferedBitmaps
                 catalogByHeight = null;
             }
 
-            if (heightsInCatalog!=null)
+            if (heightsInCatalog != null)
             {
                 heightsInCatalog.Clear();
                 heightsInCatalog = null;

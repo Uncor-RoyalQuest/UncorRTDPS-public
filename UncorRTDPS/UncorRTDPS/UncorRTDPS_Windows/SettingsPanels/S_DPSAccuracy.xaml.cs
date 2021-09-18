@@ -16,6 +16,8 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
     /// </summary>
     public partial class S_DPSAccuracy : UserControl, IMenuPanel, IDisposable
     {
+        private string menu_name = "dps_acc";
+
         public S_DPSAccuracy()
         {
             InitializeComponent();
@@ -90,7 +92,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
                 if (bmpAfterTraining != null)
                 {
                     learntSupplementaryParameters = learnParams.packAndGetAllTrainedParams();
-                    
+
                     UpdateRecognizedText(bmp);
 
                     SetBitmapSelectedArea_FiltersApplied(bmpAfterTraining);
@@ -125,7 +127,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             }
 
             StringBuilder sb = new StringBuilder();
-            for (int i=0; i<damageOCR_Target_V0.damageTargetPair_currLen; i++)
+            for (int i = 0; i < damageOCR_Target_V0.damageTargetPair_currLen; i++)
             {
                 sb.Append(damageOCR_Target_V0.damageTargetPair[i].damage + "   " + damageOCR_Target_V0.damageTargetPair[i].target);
                 if (i < damageOCR_Target_V0.damageTargetPair_currLen - 1)
@@ -155,7 +157,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
         public void SetBitmapSelectedArea_FiltersApplied(Bitmap bmp)
         {
-            if (bmp==null)
+            if (bmp == null)
             {
                 Image_SelectedArea_PlusFilters.Source = null;
                 return;
@@ -233,7 +235,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
 
         public bool IsAllArrayNotMinusOne(List<int> arr)
         {
-            for (int i=0; i<arr.Count; i++)
+            for (int i = 0; i < arr.Count; i++)
             {
                 if (arr[i] == -1)
                     return false;
@@ -248,7 +250,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             float barrierVal = (float)Slider_Barrier_Value.Value;
             float scalingVal = (float)Slider_Scaling_Value.Value;
 
-            if (!float.IsNaN(barrierVal) && !float.IsNaN(scalingVal) && (learntSupplementaryParameters!=null))
+            if (!float.IsNaN(barrierVal) && !float.IsNaN(scalingVal) && (learntSupplementaryParameters != null))
             {
                 //ok
                 RefreshTweaks();
@@ -299,6 +301,11 @@ namespace UncorRTDPS.UncorRTDPS_Windows.SettingsPanels
             Button_Refresh.Content = null;
             TextBlock_Comment_ApplyNewTweaks.Text = null;
             TextBlock_GameLang.Text = null;
+        }
+
+        public string GetMenuName()
+        {
+            return this.menu_name;
         }
     }
 }

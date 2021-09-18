@@ -3,7 +3,7 @@ namespace UncorRTDPS.Services
 {
     interface Service
     {
-        ServiceResponseStatus InitService(string param);
+        ServiceResponseStatus InitService(string[] args);
         ServiceResponseStatus CloseService();
     }
 }

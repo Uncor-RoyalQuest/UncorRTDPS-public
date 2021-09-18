@@ -7,30 +7,22 @@ namespace UncorRTDPS.DpsModels
 {
     public class DamageTarget_PoolManager : ITargetDamageListener, IModelSettingsAvailable
     {
-        public List<DamageTarget_DamageModel> activePool_Bosses = new List<DamageTarget_DamageModel>();
-        public int activePool_Bosses_CurrentLength = 0;
-        public LinkedList<int> freePositions_ActivePool_Bosses = new LinkedList<int>();
+        private List<DamageModel> activePool_Bosses = new List<DamageModel>();
+        private List<DamageModel> activePool_Elites = new List<DamageModel>();
+        private object locker_BossesPool = new object();
+        private object locker_ElitesPool = new object();
 
-        public List<DamageTarget_DamageModel> activePool_Elites = new List<DamageTarget_DamageModel>();
-        public int activePool_Elites_CurrentLength = 0;
-        public LinkedList<int> freePositions_ActivePool_Elites = new LinkedList<int>();
-
-
-
-        public List<DamageTarget_DamageModel> damageModels_Bosses = new List<DamageTarget_DamageModel>();
-        public List<DamageTarget_DamageModel> damageModels_Elites = new List<DamageTarget_DamageModel>();
-        public DamageTarget_DamageModel commonTarget_DamageModel = new DamageTarget_DamageModel();
-        public long bossSeparationTime = 30000; //30 sec
-        public long eliteSeparationTime = 15000; //15 sec
-        public long commonSeparationTime = 3000; //3 sec
+        private DamageModel[] bosses_buffer = new DamageModel[10];
+        private DamageModel[] elites_buffer = new DamageModel[10];
 
 
-        //
-        private int counterUpdLengthOfActivePools = 0;
-        public int barrierUpdLengthOfActivePools = 20;
-        //
+        private List<DamageModel> damageModels_Bosses = new List<DamageModel>();
+        private List<DamageModel> damageModels_Elites = new List<DamageModel>();
+        private DamageModel commonTarget_DamageModel = new DamageModel();
+        private long bossSeparationTime = 30000; //30 sec
+        private long eliteSeparationTime = 15000; //15 sec
+        private long commonSeparationTime = 3000; //3 sec
 
-        //
         public SearchTargetNameMethod searchTargetNameMethod;
 
         public enum SearchTargetNameMethod
@@ -43,104 +35,126 @@ namespace UncorRTDPS.DpsModels
         {
 
             List<Target> bossTargets = TargetsDictionary.TargetsDictionary.BossTargets;
-            for (int i=0; i<bossTargets.Count; i++)
+            for (int i = 0; i < bossTargets.Count; i++)
             {
-                DamageTarget_DamageModel dt_dm = new DamageTarget_DamageModel();
-                dt_dm.InitDamageTarget_DamageModel(bossTargets[i], bossSeparationTime);
-                damageModels_Bosses.Add(dt_dm);
+                DamageModel damageModel = new DamageModel();
+                damageModel.InitDamageModel(bossTargets[i], bossSeparationTime);
+                damageModels_Bosses.Add(damageModel);
             }
 
             List<Target> eliteTargets = TargetsDictionary.TargetsDictionary.EliteTargets;
             for (int i = 0; i < eliteTargets.Count; i++)
             {
-                DamageTarget_DamageModel dt_dm = new DamageTarget_DamageModel();
-                dt_dm.InitDamageTarget_DamageModel(eliteTargets[i], eliteSeparationTime);
-                damageModels_Elites.Add(dt_dm);
+                DamageModel damageModel = new DamageModel();
+                damageModel.InitDamageModel(eliteTargets[i], eliteSeparationTime);
+                damageModels_Elites.Add(damageModel);
             }
 
             this.searchTargetNameMethod = searchTargetNameMethod;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>
+        /// (len, arr) 
+        /// (0 , null) if no active
+        /// </returns>
+        public (int, DamageModel[]) GetActiveBosses_BufferedArray()
+        {
+            if (activePool_Bosses.Count < 1)
+                return (0, null);
+
+            int len = 0;
+            lock (locker_BossesPool)
+            {
+                len = activePool_Bosses.Count;
+                for (int i = 0; i < len; i++)
+                    bosses_buffer[i] = activePool_Bosses[i];
+            }
+            return (len, bosses_buffer);
+        }
 
         /// <summary>
-        /// returns null if there is no active boss
+        /// 
         /// </summary>
-        /// <returns></returns>
-        public DamageTarget_DamageModel GetFirstActiveBoss()
+        /// <returns>
+        /// (len, arr) 
+        /// (0 , null) if no active
+        /// </returns>
+        public (int, DamageModel[]) GetActiveElites_BufferedArray()
         {
-            for (int i=0; i<activePool_Bosses_CurrentLength; i++)
-            {
-                if (activePool_Bosses[i].IsActive)
-                    return activePool_Bosses[i];
-            }
+            if (activePool_Elites.Count < 1)
+                return (0, null);
 
-            return null;
+            int len = 0;
+            lock (locker_ElitesPool)
+            {
+                len = activePool_Elites.Count;
+                for (int i = 0; i < len; i++)
+                    elites_buffer[i] = activePool_Elites[i];
+            }
+            return (len, elites_buffer);
         }
 
-        public DamageTarget_DamageModel GetMostActiveBoss(long switchTimePeriod)
-        {
-            DamageTarget_DamageModel res = null;
-            long lastDmgTime = 0;
+        public DamageModel CommonTarget { get { return commonTarget_DamageModel; } }
 
-            DamageTarget_DamageModel tmp_dt_dm;
-            for (int i = 0; i < activePool_Bosses_CurrentLength; i++)
+        /// <summary>
+        /// I.e. the most recent
+        /// </summary>
+        /// <param name="switchTimePeriod"></param>
+        /// <returns>null if no active boss</returns>
+        public DamageModel GetMostActiveBoss(long switchTimePeriod)
+        {
+            if (activePool_Bosses.Count < 1)
+                return null;
+
+            DamageModel res = null;
+            long lastDmgTime = 0;
+            DamageModel tmp_dt_dm;
+            lock (locker_BossesPool)
             {
-                tmp_dt_dm = activePool_Bosses[i];
-                if (tmp_dt_dm.IsActive && tmp_dt_dm.GetLastDamageTime() > lastDmgTime + switchTimePeriod)
+                int len = activePool_Bosses.Count;
+                for (int i = 0; i < len; i++)
                 {
-                    lastDmgTime = tmp_dt_dm.GetLastDamageTime();
-                    res = tmp_dt_dm;
+                    tmp_dt_dm = activePool_Bosses[i];
+                    if (tmp_dt_dm.IsActive && tmp_dt_dm.TimeLast > lastDmgTime + switchTimePeriod)
+                    {
+                        lastDmgTime = tmp_dt_dm.TimeLast;
+                        res = tmp_dt_dm;
+                    }
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// I.e. the most recent
+        /// </summary>
+        /// <param name="switchTimePeriod"></param>
+        /// <returns>null if no active elite</returns>
+        public DamageModel GetMostActiveElite(long switchTimePeriod)
+        {
+            if (activePool_Elites.Count < 1)
+                return null;
+
+            DamageModel res = null;
+            long lastDmgTime = 0;
+            DamageModel tmp_dt_dm;
+            lock (locker_ElitesPool)
+            {
+                int len = activePool_Elites.Count;
+                for (int i = 0; i < len; i++)
+                {
+                    tmp_dt_dm = activePool_Elites[i];
+                    if (tmp_dt_dm.TimeLast > lastDmgTime + switchTimePeriod)
+                    {
+                        lastDmgTime = tmp_dt_dm.TimeLast;
+                        res = tmp_dt_dm;
+                    }
                 }
             }
 
-            return res;
-        }
-
-        public DamageTarget_DamageModel GetFirstActiveElite()
-        {
-            for (int i = 0; i < activePool_Elites_CurrentLength; i++)
-            {
-                if (activePool_Elites[i].IsActive)
-                    return activePool_Elites[i];
-            }
-
-            return null;
-        }
-
-        public DamageTarget_DamageModel GetMostActiveElite(long switchTimePeriod)
-        {
-            DamageTarget_DamageModel res = null;
-            long lastDmgTime = 0;
-
-            DamageTarget_DamageModel tmp_dt_dm;
-            for (int i = 0; i < activePool_Elites_CurrentLength; i++)
-            {
-                tmp_dt_dm = activePool_Elites[i];
-                if (tmp_dt_dm.IsActive && tmp_dt_dm.GetLastDamageTime() > lastDmgTime + switchTimePeriod)
-                {
-                    lastDmgTime = tmp_dt_dm.GetLastDamageTime();
-                    res = tmp_dt_dm;
-                }
-            }
-
-            return res;
-        }
-
-        public int CalculateCurrentlyActiveBosses()
-        {
-            int res = 0;
-            for (int i = 0; i < activePool_Bosses_CurrentLength; i++)
-                if (activePool_Bosses[i].IsActive)
-                    res += 1;
-            return res;
-        }
-
-        public int CalculateCurrentlyActiveElites()
-        {
-            int res = 0;
-            for (int i = 0; i < activePool_Elites_CurrentLength; i++)
-                if (activePool_Elites[i].IsActive)
-                    res += 1;
             return res;
         }
 
@@ -154,7 +168,7 @@ namespace UncorRTDPS.DpsModels
         {
             string searchFriendlyOriginalName;
             Target target;
-            DamageTarget_DamageModel dt_dm;
+            DamageModel damageModel;
             for (int i = startPos; i < endPos; i++)
             {
                 if (damageTargetList[i].damage == -1)
@@ -174,18 +188,6 @@ namespace UncorRTDPS.DpsModels
                             target = TargetsDictionary.TargetsDictionary.TryGetTargetLevenshteinMethodSearch(searchFriendlyOriginalName);
                             break;
                     }
-                    /*
-                    Trace.Write("Result of search ("+ searchFriendlyOriginalName+") by "+ searchTargetNameMethod);
-                    if (target == null)
-                    {
-                        Trace.Write("[common]");
-                    }
-                    else
-                    {
-                        Trace.Write(target.originalName);
-                    }
-                    Trace.Write(Environment.NewLine);
-                    */
                 }
                 if (target == null)
                 {
@@ -193,7 +195,6 @@ namespace UncorRTDPS.DpsModels
                     //means it is possibly "common" target
                     commonTarget_DamageModel.AddDamage(damageTargetList[i].damage, dmgTime);
                     commonTarget_DamageModel.IsActive = true;
-                    //Trace.WriteLine("common name =" + damageTargetList[i].target);
                 }
                 else
                 {
@@ -202,23 +203,23 @@ namespace UncorRTDPS.DpsModels
                     {
                         case TargetType.Boss:
                             //get damage model for this target
-                            dt_dm = damageModels_Bosses[target.idInsideTargetType];
+                            damageModel = damageModels_Bosses[target.idInsideTargetType];
                             //add damage into this damage model
-                            dt_dm.AddDamage(damageTargetList[i].damage, dmgTime);
+                            damageModel.AddDamage(damageTargetList[i].damage, dmgTime);
                             //check is this damage model already active
                             //if not active then add to active pool
-                            if (!dt_dm.IsActive)
-                                AddToActivePool_Bosses(dt_dm);
+                            if (!damageModel.IsActive)
+                                AddToActivePool_Bosses(damageModel);
                             break;
                         case TargetType.Elite:
                             //get damage model for this target
-                            dt_dm = damageModels_Elites[target.idInsideTargetType];
+                            damageModel = damageModels_Elites[target.idInsideTargetType];
                             //add damage into this damage model
-                            dt_dm.AddDamage(damageTargetList[i].damage, dmgTime);
+                            damageModel.AddDamage(damageTargetList[i].damage, dmgTime);
                             //check is this damage model already active
                             //if not active then add to active pool
-                            if (!dt_dm.IsActive)
-                                AddToActivePool_Elites(dt_dm);
+                            if (!damageModel.IsActive)
+                                AddToActivePool_Elites(damageModel);
                             break;
                         case TargetType.Common:
                             break;
@@ -235,120 +236,69 @@ namespace UncorRTDPS.DpsModels
             {
                 commonTarget_DamageModel.IsActive = false;
             }
-
-            //once per N adjust length of "activePool_Bosses_CurrentLength" and "activePool_Elites_CurrentLength" to the last active one
-            if (counterUpdLengthOfActivePools > barrierUpdLengthOfActivePools)
-            {
-                counterUpdLengthOfActivePools = 0;
-                AdjustActivePoolBossesLength();
-                AdjustActivePoolElitesLength();
-
-            }
-            else
-            {
-                counterUpdLengthOfActivePools += 1;
-            }
-        }
-
-        public void AdjustActivePoolBossesLength()
-        {
-            for (int i = activePool_Bosses_CurrentLength-1; i>-1; i--)
-            {
-                if (activePool_Bosses[i].IsActive)
-                {
-                    break;
-                }
-                else
-                {
-                    activePool_Bosses_CurrentLength -= 1;
-                }
-            }
-        }
-
-        public void AdjustActivePoolElitesLength()
-        {
-            for (int i = activePool_Elites_CurrentLength - 1; i > -1; i--)
-            {
-                if (activePool_Elites[i].IsActive)
-                {
-                    break;
-                }
-                else
-                {
-                    activePool_Elites_CurrentLength -= 1;
-                }
-            }
         }
 
         /// <summary>
         /// dm.target!=null
         /// </summary>
         /// <param name="dm"></param>
-        public void AddToActivePool_Bosses(DamageTarget_DamageModel dm)
+        private void AddToActivePool_Bosses(DamageModel dm)
         {
-            if (freePositions_ActivePool_Bosses.Count < 1)
+            lock (locker_BossesPool)
             {
                 activePool_Bosses.Add(dm);
-                activePool_Bosses_CurrentLength += 1;
+                dm.IsActive = true;
             }
-            else
-            {
-                int freePos = freePositions_ActivePool_Bosses.First.Value;
-                freePositions_ActivePool_Bosses.RemoveFirst();
-                activePool_Bosses[freePos] = dm;
-                if (freePos + 1 > activePool_Bosses_CurrentLength)
-                    activePool_Bosses_CurrentLength = freePos + 1;
-            }
-            dm.IsActive = true;
         }
 
         /// <summary>
         /// dm.target!=null
         /// </summary>
         /// <param name="dm"></param>
-        public void AddToActivePool_Elites(DamageTarget_DamageModel dm)
+        private void AddToActivePool_Elites(DamageModel dm)
         {
-            if (freePositions_ActivePool_Elites.Count < 1)
+            lock (locker_ElitesPool)
             {
                 activePool_Elites.Add(dm);
-                activePool_Elites_CurrentLength += 1;
+                dm.IsActive = true;
             }
-            else
-            {
-                int freePos = freePositions_ActivePool_Elites.First.Value;
-                freePositions_ActivePool_Elites.RemoveFirst();
-                activePool_Elites[freePos] = dm;
-                if (freePos + 1 > activePool_Elites_CurrentLength)
-                    activePool_Elites_CurrentLength = freePos + 1;
-            }
-            dm.IsActive = true;
         }
 
-        public void CheckActivePoolBossesForExpired(long timeToCompare)
+        private void CheckActivePoolBossesForExpired(long timeToCompare)
         {
-            for (int i=0; i<activePool_Bosses_CurrentLength; i++)
+            int len = activePool_Bosses.Count;
+            for (int i = 0; i < len; i++)
             {
                 if (activePool_Bosses[i].IsDamageExpired(timeToCompare))
                 {
-                    activePool_Bosses[i].IsActive = false;
-                    freePositions_ActivePool_Bosses.AddLast(i);
+                    lock (locker_BossesPool)
+                    {
+                        activePool_Bosses[i].IsActive = false;
+                        activePool_Bosses.RemoveAt(i);
+                        len -= 1;
+                    }
                 }
             }
         }
 
-        public void CheckActivePoolElitesForExpired(long timeToCompare)
+        private void CheckActivePoolElitesForExpired(long timeToCompare)
         {
-            for (int i = 0; i < activePool_Elites_CurrentLength; i++)
+            int len = activePool_Elites.Count;
+            for (int i = 0; i < len; i++)
             {
                 if (activePool_Elites[i].IsDamageExpired(timeToCompare))
                 {
-                    activePool_Elites[i].IsActive = false;
-                    freePositions_ActivePool_Elites.AddLast(i);
+                    lock (locker_ElitesPool)
+                    {
+                        activePool_Elites[i].IsActive = false;
+                        activePool_Elites.RemoveAt(i);
+                        len -= 1;
+                    }
                 }
             }
         }
 
-        public void FireTargetDamage(List<DamageTarget> damageTargets, int posStart, int posEnd, long dmgTime)
+        public void RecieveTargetDamage(List<DamageTarget> damageTargets, int posStart, int posEnd, long dmgTime)
         {
             AddDamage(damageTargets, posStart, posEnd, dmgTime);
         }

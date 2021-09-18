@@ -1,12 +1,11 @@
-﻿
-namespace UncorRTDPS.Services
+﻿namespace UncorRTDPS.Services
 {
     class Point<T>
     {
         public T X { get; set; }
         public T Y { get; set; }
 
-        public Point(){}
+        public Point() { }
 
         public Point(T X, T Y)
         {
