@@ -1,8 +1,10 @@
-﻿using UncorRTDPS.DpsModels.TargetsDictionary;
+﻿using System.IO;
+using UncorRTDPS.DpsModels.TargetsDictionary;
+using UncorRTDPS.Util.Serialization;
 
 namespace UncorRTDPS.DpsModels
 {
-    public class DamageModel
+    public class DamageModel : ICustomBinarySerializable
     {
 
         private Target target = null;
@@ -18,7 +20,7 @@ namespace UncorRTDPS.DpsModels
         private Services.DamageHistory.RecentDamage recentDamageService = null;
 
         //util
-        public long msTimeSeparation = 5000;
+        private long msTimeSeparation = 5000;
         //
 
         public Target Target { get { return target; } }
@@ -28,6 +30,8 @@ namespace UncorRTDPS.DpsModels
         public long Hits { get { return hits; } }
         public long MaxHitDmg { get { return maxHitDmg; } }
         public DamageSequence DamageSequence { get { return damageSequence; } }
+
+        public long MsTimeSeparation { set { msTimeSeparation = value; } }
 
         public DamageModel()
         {
@@ -77,11 +81,21 @@ namespace UncorRTDPS.DpsModels
                 resetAsked = false;
             }
 
+            if (hits == 0L)
+            {
+                damageTimeStart = dmgTime;
+                damageTimeLast = dmgTime;
+            }
+            if (damage < 1L)
+            {
+                return;
+            }
+
             damageTotal += damage;
             hits += 1;
+            damageTimeLast = dmgTime;
             if (damage > maxHitDmg)
                 maxHitDmg = damage;
-            damageTimeLast = dmgTime;
             damageSequence.AddDamageToSequence(damage, dmgTime);
             if (hits == 1 && target != null)
             {
@@ -135,6 +149,33 @@ namespace UncorRTDPS.DpsModels
         public DamageModel Clone()
         {
             return new DamageModel(target, isActive, damageTotal, damageTimeStart, damageTimeLast, hits, maxHitDmg, resetAsked, damageSequence.Clone(), msTimeSeparation);
+        }
+
+        public void ReadObject(BinaryReader binaryReader)
+        {
+            string searchFriendlyOriginalTargetName = binaryReader.ReadString();
+            target = TargetsDictionary.TargetsDictionary.TryGetTargetFromSimpleDictionary(searchFriendlyOriginalTargetName);
+
+            damageTotal = binaryReader.ReadInt64();
+            damageTimeStart = binaryReader.ReadInt64();
+            damageTimeLast = binaryReader.ReadInt64();
+            hits = binaryReader.ReadInt64();
+            maxHitDmg = binaryReader.ReadInt64();
+
+            damageSequence.ReadObject(binaryReader);
+        }
+
+        public void WriteObject(BinaryWriter binaryWriter)
+        {
+            binaryWriter.Write(target?.searchFriendlyOriginalName);
+
+            binaryWriter.Write(damageTotal);
+            binaryWriter.Write(damageTimeStart);
+            binaryWriter.Write(damageTimeLast);
+            binaryWriter.Write(hits);
+            binaryWriter.Write(maxHitDmg);
+
+            damageSequence.WriteObject(binaryWriter);
         }
     }
 }

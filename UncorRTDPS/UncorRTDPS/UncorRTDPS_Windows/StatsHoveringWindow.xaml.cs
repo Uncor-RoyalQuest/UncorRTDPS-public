@@ -51,7 +51,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
                 }
             }
 
-            if (UncorRTDPS_Config.getConfigVal("prohibitTransparency") == "0")
+            if (UncorRTDPS_Config.GetConfigVal("prohibitTransparency") == "0")
             {
                 this.AllowsTransparency = true;
             }
@@ -551,9 +551,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows
         {
             if (damagePoolManager == null)
             {
-                DpsModels.TargetsDictionary.TargetsDictionary.LoadDictionary(UncorRTDPS_StaticSettings.ResourcesPath, UncorRTDPS_StaticSettings.OcrSettings.Lang);
-
-                string distanceMethod = UncorRTDPS_Config.getConfigVal("distanceMethod");
+                string distanceMethod = UncorRTDPS_Config.GetConfigVal("distanceMethod");
                 DamageTarget_PoolManager.SearchTargetNameMethod searchTargetNameMethod;
                 if (distanceMethod.Equals("ham"))
                 {

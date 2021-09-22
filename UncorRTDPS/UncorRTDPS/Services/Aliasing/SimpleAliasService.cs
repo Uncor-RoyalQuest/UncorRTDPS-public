@@ -13,39 +13,36 @@ namespace UncorRTDPS.Services.Aliasing
             if (args == null || args.Length < 1)
                 return ServiceResponseStatus.FAILED;
             string fileName_aliasesFile = args[0];
-            try
+
+            ServiceResponseStatus status = ServiceResponseStatus.OK;
+            if (File.Exists(fileName_aliasesFile))
             {
-                if (File.Exists(fileName_aliasesFile))
+                using StreamReader file = new StreamReader(fileName_aliasesFile);
+                try
                 {
-                    using (StreamReader file = new StreamReader(fileName_aliasesFile))
+                    string line;
+                    string[] d;
+                    aliasesDictionary = new Dictionary<string, string>();
+                    while ((line = file.ReadLine()) != null)
                     {
-                        string line;
-                        string[] d;
-                        aliasesDictionary = new Dictionary<string, string>();
-                        while ((line = file.ReadLine()) != null)
+                        if (line.Trim().Length < 1)
+                            continue;
+                        d = line.Split(keyValueSeparator);
+                        if (d.Length == 2 && d[0] != null && d[1] != null)
                         {
-                            if (line.Trim().Length < 1)
-                                continue;
-                            d = line.Split(keyValueSeparator);
-                            if (d.Length == 2 && d[0] != null && d[1] != null)
+                            string key = d[0].Trim();
+                            string val = d[1].Trim();
+                            if (key.Length > 0 && val.Length > 0)
                             {
-                                string key = d[0].Trim();
-                                string val = d[1].Trim();
-                                if (key.Length > 0 && val.Length > 0)
-                                {
-                                    aliasesDictionary[key] = val;
-                                }
+                                aliasesDictionary[key] = val;
                             }
                         }
-
                     }
                 }
+                catch { status = ServiceResponseStatus.FAILED; }
+                finally { file.Dispose(); }
             }
-            catch
-            {
-                return ServiceResponseStatus.FAILED;
-            }
-            return ServiceResponseStatus.OK;
+            return status;
         }
 
         public ServiceResponseStatus CloseService()

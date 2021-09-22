@@ -20,7 +20,6 @@ namespace UncorRTDPS
 
         public static void InitUncorRTDPS(string resourcesPath, string uiLanguage)
         {
-
             //set uiLang
             if (uiLanguage.Equals("eng") || uiLanguage.Equals("en"))
             {
@@ -51,6 +50,9 @@ namespace UncorRTDPS
             RTDPS_Settings.UncorRTDPS_StaticSettings.InitFromConfig();
             RTDPS_Settings.UncorRTDPS_StaticSettings.InitImages();
 
+            //load targets
+            DpsModels.TargetsDictionary.TargetsDictionary.LoadDictionary(RTDPS_Settings.UncorRTDPS_StaticSettings.ResourcesPath, RTDPS_Settings.UncorRTDPS_StaticSettings.OcrSettings.Lang);
+
             //Add Window Position Service to Service Container
             Services.WindowPositionService windowPositionService = new Services.WindowPositionService();
             windowPositionService.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "windowspositions.json")) });
@@ -78,7 +80,7 @@ namespace UncorRTDPS
 
             //Add RecentDamage Service to Service Container
             Services.DamageHistory.RecentDamage recentDamage = new Services.DamageHistory.RecentDamage();
-            recentDamage.InitService(null);
+            recentDamage.InitService(new string[] { Path.GetFullPath(Path.Combine(resourcesPath, "src", "recentdamage.dat")) });
             Services.ServicesContainer.AddNewService("recentDamage", recentDamage);
 
             //Add MobsIconsService Service to Service Container

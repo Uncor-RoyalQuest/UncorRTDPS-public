@@ -5,6 +5,7 @@ using System.Globalization;
 using UncorRTDPS.DpsModels;
 using UncorRTDPS.RTDPS_Settings;
 using UncorRTDPS.Services.MobsIcons;
+using UncorRTDPS.Util;
 
 namespace UncorRTDPS.Services.DamageHistory
 {
@@ -41,10 +42,13 @@ namespace UncorRTDPS.Services.DamageHistory
 
         public void AddEntity(DamageModel dm)
         {
+            if (dm.Target == null)
+                return;
             Entities.Add(new Entity(
                 datagridIds,
                 mobsIconsService?.GetMobImage(dm.Target),
                 dm.Target.originalName,
+                DataFormattingForView.GetPercentFromDamageAndHp(dm.TotalDamage, dm?.Target.hp),
                 dm.TotalDamage.ToString("#,0", numberFormatInfo_FancyLong),
                 dm.CalcDps().ToString("#,0", numberFormatInfo_FancyLong),
                 (dm.CalcDamageTime() / 1000).ToString("#,0", numberFormatInfo_FancyLong),
@@ -58,7 +62,7 @@ namespace UncorRTDPS.Services.DamageHistory
 
         public void InitNumberFormat()
         {
-            string nf = UncorRTDPS_Config.getConfigVal("numberFormat_ThrousandsSeparator");
+            string nf = UncorRTDPS_Config.GetConfigVal("numberFormat_ThrousandsSeparator");
             if (nf == null || nf.Length < 1 || nf.Equals("0"))
                 nf = " ";
             numberFormatInfo_FancyLong = new NumberFormatInfo { NumberGroupSeparator = nf };

@@ -47,9 +47,26 @@
     </Window.Resources>
     
     <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Name="ContextMenu_Item_ShowIcon" Header="Show Icon" Click="ContextMenu_Item_ShowIcon_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowName" Header="Show Name" Click="ContextMenu_Item_ShowName_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowDamagePercent" Header="Show DamagePercent" Click="ContextMenu_Item_ShowDamagePercent_Click"  IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowDamage" Header="Show Damage" Click="ContextMenu_Item_ShowDamage_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowDps" Header="Show DPS" Click="ContextMenu_Item_ShowDps_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowHits" Header="Show Hits" Click="ContextMenu_Item_ShowHits_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowMaxHitDmg" Header="Show MaxHitDmg" Click="ContextMenu_Item_ShowMaxHitDmg_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowTime" Header="Show Time" Click="ContextMenu_Item_ShowTime_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowTimeStart" Header="Show TimeStart" Click="ContextMenu_Item_ShowTimeStart_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowTimeEnd" Header="Show TimeEnd" Click="ContextMenu_Item_ShowTimeEnd_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="ContextMenu_Item_ShowDetails" Header="Show Details" Click="ContextMenu_Item_ShowDetails_Click" IsCheckable="True" IsChecked="True"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        
         <DataGrid Name="DataGrid_Entities" RowHeaderWidth="0" VerticalGridLinesBrush="#FF3C3C3C" HorizontalGridLinesBrush="#FF3C3C3C" ItemsSource="{Binding Entities}" IsReadOnly="True" AutoGenerateColumns="False" Background="#FF252526">
             <DataGrid.Columns>
-                <DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn x:Name="Column_Img">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Img}"/>
@@ -57,55 +74,61 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 
-                <DataGridTextColumn Binding="{Binding Name}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_Name" Binding="{Binding Name}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Name" Text="Name" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
+
+                <DataGridTextColumn x:Name="Column_DamagePercent" Binding="{Binding DamagePercent}" ElementStyle="{StaticResource RightCell}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Name="TextBlock_Header_RecentDamage_DamagePercent" Text="Damage %" Padding="5,0,5,0"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
                 
-                <DataGridTextColumn Binding="{Binding Damage}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_Damage" Binding="{Binding Damage}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Damage" Text="Damage" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                
-                <DataGridTextColumn Binding="{Binding DPS}" ElementStyle="{StaticResource RightCell}">
+
+                <DataGridTextColumn x:Name="Column_Dps" Binding="{Binding DPS}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Dps" Text="DPS" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Binding="{Binding Hits}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_Hits" Binding="{Binding Hits}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Hits" Text="Hits" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Binding="{Binding MaxHitDmg}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_MaxHitDmg" Binding="{Binding MaxHitDmg}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_MaxHitDmg" Text="Max Hit Dmg" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Binding="{Binding BattleDuration}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_BattleDuration" Binding="{Binding BattleDuration}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Time" Text="Time" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 
-                <DataGridTextColumn Binding="{Binding TimeStart}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_TimeStart" Binding="{Binding TimeStart}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_TimeStart" Text="Time Start" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 
-                <DataGridTextColumn Binding="{Binding TimeEnd}" ElementStyle="{StaticResource RightCell}">
+                <DataGridTextColumn x:Name="Column_TimeEnd" Binding="{Binding TimeEnd}" ElementStyle="{StaticResource RightCell}">
                     <DataGridTextColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_TimeEnd" Text="Time End" Padding="5,0,5,0"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="Column_Details">
                     <DataGridTemplateColumn.Header>
                         <TextBlock Name="TextBlock_Header_RecentDamage_Details" Text="Details" Padding="5,0,5,0"/>
                     </DataGridTemplateColumn.Header>

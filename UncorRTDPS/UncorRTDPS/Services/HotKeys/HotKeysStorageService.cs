@@ -43,35 +43,28 @@ namespace UncorRTDPS.Services.HotKeys
 
         public ServiceResponseStatus CloseService()
         {
+            ServiceResponseStatus status = ServiceResponseStatus.OK;
             try
             {
                 string jsonHotKeyCombinations = JsonSerializer.Serialize<Dictionary<string, HotKeyCombination>>(hotKeyCombinations);
 
-                using (FileStream fs = new FileStream(fileName_jsonDictionaryHotKeyCombinations, FileMode.Create))
+                using FileStream fs = new FileStream(fileName_jsonDictionaryHotKeyCombinations, FileMode.Create);
+                try
                 {
+                    using StreamWriter file = new StreamWriter(fs);
                     try
                     {
-                        using (StreamWriter file = new StreamWriter(fs))
-                        {
-                            file.Write(jsonHotKeyCombinations);
-                        }
+                        file.Write(jsonHotKeyCombinations);
                     }
-                    catch
-                    {
-                        return ServiceResponseStatus.FAILED;
-                    }
-                    finally
-                    {
-                        fs.Dispose();
-                    }
+                    catch { status = ServiceResponseStatus.FAILED; }
+                    finally { file.Dispose(); }
                 }
+                catch { status = ServiceResponseStatus.FAILED; }
+                finally { fs.Dispose(); }
 
             }
-            catch
-            {
-                return ServiceResponseStatus.FAILED;
-            }
-            return ServiceResponseStatus.OK;
+            catch { status = ServiceResponseStatus.FAILED; }
+            return status;
         }
 
 

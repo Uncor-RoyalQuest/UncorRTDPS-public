@@ -21,7 +21,12 @@ namespace UncorRTDPS.Services.MobsIcons
             if (!Directory.Exists(imgFolderFullPath) || !File.Exists(linkerFileFullPath))
                 return res;
 
-            string[] imgFileNames = Directory.GetFiles(imgFolderFullPath, "*.png", SearchOption.TopDirectoryOnly);
+            string[] imgFileNames = null;
+            try
+            {
+                imgFileNames = Directory.GetFiles(imgFolderFullPath, "*.png", SearchOption.TopDirectoryOnly);
+            }
+            catch { imgFileNames = null; }
             if (imgFileNames == null)
                 return res;
 
@@ -34,8 +39,9 @@ namespace UncorRTDPS.Services.MobsIcons
                 imgs[imgUniqueNumber] = new BitmapImage(new Uri(imgFullName));
             }
 
-            using (StreamReader file = new StreamReader(linkerFileFullPath))
+            try
             {
+                using StreamReader file = new StreamReader(linkerFileFullPath);
                 string line;
                 string[] d;
                 while ((line = file.ReadLine()) != null)
@@ -54,6 +60,7 @@ namespace UncorRTDPS.Services.MobsIcons
                     }
                 }
             }
+            catch { return null; }
 
             foreach (var kv in links)
             {

@@ -10,6 +10,7 @@ using UncorRTDPS.RTDPS_Settings;
 using UncorRTDPS.Services;
 using UncorRTDPS.Services.WindowSize;
 using UncorRTDPS.UncorRTDPS_Windows.EventAware;
+using UncorRTDPS.Util;
 
 namespace UncorRTDPS.DamageCharts
 {
@@ -133,7 +134,7 @@ namespace UncorRTDPS.DamageCharts
 
 
         private bool isAwareEventsRegistered = false;
-        public void Init(DamageSequence damageSequence, string mobName)
+        public void Init(DamageSequence damageSequence, string mobName, long? mobHp = null)
         {
             titleDamageTime = mobName + Environment.NewLine + UncorRTDPS_Localization.GetLocaleGuiVal("guiCharts_DamageSlTime");
             titleDamageHit = mobName + Environment.NewLine + UncorRTDPS_Localization.GetLocaleGuiVal("guiCharts_DamageSlHit");
@@ -150,8 +151,14 @@ namespace UncorRTDPS.DamageCharts
             InitDamageTimeScatter(damageSequence);
             InitDamageHitScatter(damageSequence);
 
+            long sumDamage = damageSequence.CalcSumDamage();
+            string dmgPercentAddition = "";
+            if (mobHp != null && mobHp.Value > 0L)
+            {
+                dmgPercentAddition = " (" + DataFormattingForView.GetPercentFromDamageAndHp(sumDamage, mobHp.Value) + ")";
+            }
 
-            GeneralInfo_Damage_Value.Text = damageSequence.CalcSumDamage().ToString("#,0", numberFormatInfo_FancyLong);
+            GeneralInfo_Damage_Value.Text = sumDamage.ToString("#,0", numberFormatInfo_FancyLong) + dmgPercentAddition;
             GeneralInfo_Hits_Value.Text = damageSequence.GetHitsCount().ToString("#,0", numberFormatInfo_FancyLong);
             GeneralInfo_Time_Value.Text = (damageSequence.GetDamageDurationInMs() / 1000).ToString("#,0", numberFormatInfo_FancyLong);
 
@@ -169,22 +176,22 @@ namespace UncorRTDPS.DamageCharts
             ignoreCheckedUncheckedEvent = false;
             string s;
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotShowDps");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotShowDps");
             CheckBox_ShowDPS.IsChecked = s == "0";
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotShowDph");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotShowDph");
             CheckBox_ShowAvgHitDamage.IsChecked = s == "0";
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotShowMax");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotShowMax");
             CheckBox_ShowMax.IsChecked = s == "0";
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotShowMin");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotShowMin");
             CheckBox_ShowMin.IsChecked = s == "0";
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotShowLegend");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotShowLegend");
             CheckBox_ShowLegend.IsChecked = s == "0";
 
-            s = UncorRTDPS_Config.getConfigVal("charts_NotEnableHighlightByCursor");
+            s = UncorRTDPS_Config.GetConfigVal("charts_NotEnableHighlightByCursor");
             CheckBox_EnableHighlightByCursor.IsChecked = s == "0";
 
             if (!isAwareEventsRegistered)
@@ -195,16 +202,16 @@ namespace UncorRTDPS.DamageCharts
             }
         }
 
-        public void InitNumberFormat()
+        private void InitNumberFormat()
         {
-            string nf = UncorRTDPS_Config.getConfigVal("numberFormat_ThrousandsSeparator");
+            string nf = UncorRTDPS_Config.GetConfigVal("numberFormat_ThrousandsSeparator");
             if (nf == null || nf.Length < 1 || nf.Equals("0"))
                 nf = " ";
             numberFormatInfo_FancyLong = new NumberFormatInfo { NumberGroupSeparator = nf };
         }
 
 
-        public void InitDamageHitScatter(DamageSequence damageSequence)
+        private void InitDamageHitScatter(DamageSequence damageSequence)
         {
             Chart_DamageByHits.Plot.Clear();
             Chart_DamageByHits.Plot.Style(ScottPlot.Style.Gray1);
@@ -249,7 +256,7 @@ namespace UncorRTDPS.DamageCharts
             (chart_DamageByHits_HLine_Min, chart_DamageByHits_Text_Min, chart_DamageByHits_Arrows_Min) = AddMinToPlot(Chart_DamageByHits.Plot, damagePerHits, hitsIteration, minText, damagePerHits_Min, 0.001);
         }
 
-        public void InitDamageTimeScatter(DamageSequence damageSequence)
+        private void InitDamageTimeScatter(DamageSequence damageSequence)
         {
             Chart_DamageByTime.Plot.Clear();
             Chart_DamageByTime.Plot.Style(ScottPlot.Style.Gray1);

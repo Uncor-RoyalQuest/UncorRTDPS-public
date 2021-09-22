@@ -42,35 +42,25 @@ namespace UncorRTDPS.Services
 
         public ServiceResponseStatus CloseService()
         {
+            ServiceResponseStatus status = ServiceResponseStatus.OK;
             try
             {
                 string jsonWindowsPositions = JsonSerializer.Serialize<Dictionary<string, Point<double>>>(windowsPositions);
 
-                using (FileStream fs = new FileStream(fileName_jsonDictionaryWindowsPoints, FileMode.Create))
+                using FileStream fs = new FileStream(fileName_jsonDictionaryWindowsPoints, FileMode.Create);
+                try
                 {
-                    try
-                    {
-                        using (StreamWriter file = new StreamWriter(fs))
-                        {
-                            file.Write(jsonWindowsPositions);
-                        }
-                    }
-                    catch
-                    {
-                        return ServiceResponseStatus.FAILED;
-                    }
-                    finally
-                    {
-                        fs.Dispose();
-                    }
+                    using StreamWriter file = new StreamWriter(fs);
+                    try { file.Write(jsonWindowsPositions); }
+                    catch { status = ServiceResponseStatus.FAILED; }
+                    finally { file.Dispose(); }
                 }
+                catch { status = ServiceResponseStatus.FAILED; }
+                finally { fs.Dispose(); }
 
             }
-            catch
-            {
-                return ServiceResponseStatus.FAILED;
-            }
-            return ServiceResponseStatus.OK;
+            catch { status = ServiceResponseStatus.FAILED; }
+            return status;
         }
 
 

@@ -181,7 +181,7 @@ namespace UncorRTDPS
             rpsLimit_Active = RTDPS_Settings.UncorRTDPS_StaticSettings.RpsMonitoringLimit_Active;
             rpsLimit_Inactive = RTDPS_Settings.UncorRTDPS_StaticSettings.RpsMonitoringLimit_Inactive;
 
-            long activeInactiveSwitchTimespan = SLong.FromString(RTDPS_Settings.UncorRTDPS_Config.getConfigVal("monitoring_ActiveInactiveSwitchTimespan")) ?? 30000;
+            long activeInactiveSwitchTimespan = SLong.FromString(RTDPS_Settings.UncorRTDPS_Config.GetConfigVal("monitoring_ActiveInactiveSwitchTimespan")) ?? 30000;
             if (activeInactiveSwitchTimespan < 1)
                 activeInactiveSwitchTimespan = 30000;
 

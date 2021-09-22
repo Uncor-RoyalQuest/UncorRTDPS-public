@@ -178,7 +178,7 @@ namespace UncorRTDPS.DpsModels
                 target = TargetsDictionary.TargetsDictionary.TryGetTargetFromSimpleDictionary(searchFriendlyOriginalName);
                 if (target == null)
                 {
-                    //target wasnt found by simple search. try hamming method searcg
+                    //target wasnt found by simple search. try hamm/lev method search
                     switch (searchTargetNameMethod)
                     {
                         case SearchTargetNameMethod.HammingDistance:
@@ -311,15 +311,15 @@ namespace UncorRTDPS.DpsModels
 
             for (int i = 0; i < damageModels_Bosses.Count; i++)
             {
-                damageModels_Bosses[i].msTimeSeparation = bossSeparationTime;
+                damageModels_Bosses[i].MsTimeSeparation = bossSeparationTime;
             }
 
             for (int i = 0; i < damageModels_Elites.Count; i++)
             {
-                damageModels_Elites[i].msTimeSeparation = eliteSeparationTime;
+                damageModels_Elites[i].MsTimeSeparation = eliteSeparationTime;
             }
 
-            commonTarget_DamageModel.msTimeSeparation = commonSeparationTime;
+            commonTarget_DamageModel.MsTimeSeparation = commonSeparationTime;
         }
     }
 

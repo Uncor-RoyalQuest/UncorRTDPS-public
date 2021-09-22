@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UncorRTDPS.Util.Serialization;
 
 namespace UncorRTDPS.DpsModels
 {
-    public class DamageSequence
+    public class DamageSequence : ICustomBinarySerializable
     {
         private object locker = new object();
         private List<Damage> damageSequence = new List<Damage>();
@@ -157,6 +159,31 @@ namespace UncorRTDPS.DpsModels
             }
 
             return res.ToArray();
+        }
+
+        public void ReadObject(BinaryReader binaryReader)
+        {
+            int len = binaryReader.ReadInt32();
+            for (int i = 0; i < len; i++)
+            {
+                long dmg = binaryReader.ReadInt64();
+                long time = binaryReader.ReadInt64();
+                damageSequence.Add(new Damage(dmg, time));
+            }
+        }
+
+        public void WriteObject(BinaryWriter binaryWriter)
+        {
+            lock (locker)
+            {
+                int len = damageSequence.Count;
+                binaryWriter.Write(len);
+                for (int i = 0; i < len; i++)
+                {
+                    binaryWriter.Write(damageSequence[i].Dmg);
+                    binaryWriter.Write(damageSequence[i].Time);
+                }
+            }
         }
     }
 }

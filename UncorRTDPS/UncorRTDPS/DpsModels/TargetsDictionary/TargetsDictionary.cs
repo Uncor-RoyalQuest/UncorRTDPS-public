@@ -214,14 +214,14 @@ namespace UncorRTDPS.DpsModels.TargetsDictionary
             //acceptable distance
 
             //lev
-            double d = SDouble.FromString(RTDPS_Settings.UncorRTDPS_Config.getConfigVal("similarityBarrier_Lev"));
+            double d = SDouble.FromString(RTDPS_Settings.UncorRTDPS_Config.GetConfigVal("similarityBarrier_Lev"));
             if (!Double.IsNaN(d) && d != 0.0d)
             {
                 acceptableBorderDistance_Lev = d;
             }
 
             //ham
-            d = SDouble.FromString(RTDPS_Settings.UncorRTDPS_Config.getConfigVal("similarityBarrier_Ham"));
+            d = SDouble.FromString(RTDPS_Settings.UncorRTDPS_Config.GetConfigVal("similarityBarrier_Ham"));
             if (!Double.IsNaN(d) && d != 0.0d)
             {
                 acceptableBorderDistance_Ham = d;

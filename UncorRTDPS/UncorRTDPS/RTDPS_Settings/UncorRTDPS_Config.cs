@@ -78,7 +78,7 @@ namespace UncorRTDPS.RTDPS_Settings
             catch { }
         }
 
-        public static string getConfigVal(string cfgName)
+        public static string GetConfigVal(string cfgName)
         {
             if (!configs.ContainsKey(cfgName))
             {
@@ -90,14 +90,17 @@ namespace UncorRTDPS.RTDPS_Settings
 
         public static void UpdateConfigVal(string cfgKey, string newValue)
         {
-            /*
-            if (!configs.ContainsKey(cfgKey))
-            {
-                configs.Add(cfgKey, newValue);
-                return;
-            }
-            */
             configs[cfgKey] = newValue;
+        }
+
+        public static bool? GetConfigVal_Bool(string cfgName)
+        {
+            bool res;
+            if (!bool.TryParse(GetConfigVal(cfgName), out res))
+            {
+                return null;
+            }
+            return res;
         }
     }
 }

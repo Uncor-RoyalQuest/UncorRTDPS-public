@@ -42,35 +42,25 @@ namespace UncorRTDPS.Services.WindowSize
 
         public ServiceResponseStatus CloseService()
         {
+            ServiceResponseStatus status = ServiceResponseStatus.OK;
             try
             {
                 string jsonWindowsSizes = JsonSerializer.Serialize<Dictionary<string, Size<double>>>(windowsSizes);
 
-                using (FileStream fs = new FileStream(fileName_jsonDictionaryWindowsSizes, FileMode.Create))
+                using FileStream fs = new FileStream(fileName_jsonDictionaryWindowsSizes, FileMode.Create);
+                try
                 {
-                    try
-                    {
-                        using (StreamWriter file = new StreamWriter(fs))
-                        {
-                            file.Write(jsonWindowsSizes);
-                        }
-                    }
-                    catch
-                    {
-                        return ServiceResponseStatus.FAILED;
-                    }
-                    finally
-                    {
-                        fs.Dispose();
-                    }
+                    using StreamWriter file = new StreamWriter(fs);
+                    try { file.Write(jsonWindowsSizes); }
+                    catch { status = ServiceResponseStatus.FAILED; }
+                    finally { file.Dispose(); }
                 }
+                catch { status = ServiceResponseStatus.FAILED; }
+                finally { fs.Dispose(); }
 
             }
-            catch
-            {
-                return ServiceResponseStatus.FAILED;
-            }
-            return ServiceResponseStatus.OK;
+            catch { status = ServiceResponseStatus.FAILED; }
+            return status;
         }
 
 

@@ -108,7 +108,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
 
         public void InitNumberFormat()
         {
-            string nf = UncorRTDPS_Config.getConfigVal("numberFormat_ThrousandsSeparator");
+            string nf = UncorRTDPS_Config.GetConfigVal("numberFormat_ThrousandsSeparator");
             if (nf == null || nf.Length < 1 || nf.Equals("0"))
                 nf = " ";
             numberFormatInfo_FancyLong = new NumberFormatInfo { NumberGroupSeparator = nf };
@@ -122,6 +122,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             ContextMenu_Item_CopyHits.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyHits");
             ContextMenu_Item_CopyMaxHitDmg.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyMaxHitDmg");
             ContextMenu_Item_CopyAll.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiCopyAll");
+            ContextMenu_Item_OpenChart.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiOpenDetailedCharts");
 
             ContextMenu_Item_ResetStat.Header = UncorRTDPS_Localization.GetLocaleGuiVal("guiResetStatistics");
 
@@ -208,23 +209,16 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
                 }
 
                 //dmg percent value
-                string s_perc = GetPercentFromDamageAndHp(damageDealt, target.hp);
+                string s_perc = DataFormattingForView.GetPercentFromDamageAndHp(damageDealt, target.hp);
                 if (s_perc != null)
                 {
-                    TextBlock_DMG_PercentValue.Text = s_perc;
+                    TextBlock_DMG_PercentValue.Text = "(" + s_perc + ")";
                 }
                 else if (TextBlock_DMG_PercentValue.Text.Length > 0)
                 {
                     TextBlock_DMG_PercentValue.Text = "";
                 }
             }
-        }
-
-        public string GetPercentFromDamageAndHp(long dmg, long hp)
-        {
-            if (hp < 1)
-                return null;
-            return "(" + String.Format("{0:0.##}", ((double)dmg / hp) * 100) + "%)";
         }
 
         private long lastLeftClick_TextBlock_DMG_Value = 0;
@@ -476,7 +470,7 @@ namespace UncorRTDPS.UncorRTDPS_Windows.DpsPanel
             if (lastDamageModel == null)
                 return;
             DamageChartWindow damageChartWindow = new DamageChartWindow();
-            damageChartWindow.Init(lastDamageModel.DamageSequence.Clone(), lastTarget == null ? commonTargetName : lastTarget.originalName);
+            damageChartWindow.Init(lastDamageModel.DamageSequence.Clone(), lastTarget == null ? commonTargetName : lastTarget.originalName, lastTarget?.hp);
             if (damageChartWindow.IsStartupPositionUnknown)
             {
                 damageChartWindow.Top = UncorRTDPS_StaticSettings.DpsWindowSettings.ScreenPositionY;
